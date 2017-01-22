@@ -7,7 +7,7 @@ countdown clock
 Install Clock using the "go get" command:
 
 ```
-go get github.com/xcxlegend/go
+go get github.com/xcxlegend/go/clock
 ```
 
 ## Example
