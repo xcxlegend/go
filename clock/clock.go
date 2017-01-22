@@ -47,8 +47,8 @@ func (c *clock) ShowTime() int {
 	return c.time
 }
 
-func (c *clock) WaitAlarm() bool {
-	return <-c.chans.alarm
+func (c *clock) Wait() chan bool {
+	return c.chans.alarm
 }
 
 type ChanGroup struct {
