@@ -23,6 +23,6 @@ c.Start()
 c.Reset(5)
 
 fmt.Println("time: ", c.ShowTime())
-c.WaitAlarm()  // <- chan bool
+<-c.Wait()  // <- chan bool
 
 ```
