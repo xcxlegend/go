@@ -175,6 +175,11 @@ function downfile(){
                 </tr>
 
                 <tr>
+                    <td>上传自动是否解压: （仅支持 .zip 文件）</td>
+                    <td><input type="checkbox" class="easyui-textbox" name="auto_unzip"></input></td>
+                </tr>
+
+                <tr>
                     <td>选择文件:</td>
                    <td><input readonly="" id="form-file" class="easyui-textbox" type="text" name="file" data-options="required:true"></input></td>
                 </tr>

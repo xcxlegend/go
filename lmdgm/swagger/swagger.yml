@@ -1,0 +1,26 @@
+swagger: "2.0"
+info:
+  title: mobile API
+  description: lmd game gm background
+  version: 1.0.0
+  contact:
+    email: xcx_legender@qq.com
+basePath: /public/v1
+paths:
+  /download/:
+    get:
+      tags:
+      - download
+      description: 下载服务器文件
+      operationId: DownController.Get Resourse files
+      parameters:
+      - in: query
+        name: file
+        description: file=相对路径地址 完整地址为 http://域名:端口/Base url/download?file=xxx.xx
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{file}'
+        "404":
+          description: Not Found

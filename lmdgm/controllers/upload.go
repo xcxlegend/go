@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/xcxlegend/go/compress"
 	"io"
 	// "net/url"
 	"os"
@@ -9,7 +10,9 @@ import (
 	"strings"
 )
 
-const BASE_DIR = "D:\\LegendXie\\Ftp"
+var ZIPEXT = map[string]bool{
+	".zip": true,
+}
 
 type Files struct {
 	Path  string `json:"path"`
@@ -19,10 +22,15 @@ type Files struct {
 
 type UploadController struct {
 	BaseController
+	BASE_DIR string
+}
+
+func (this *UploadController) Prepare() {
+	this.BASE_DIR = beego.AppConfig.String("path.sftp.base")
 }
 
 func (this *UploadController) Index() {
-	this.Data["base_dir"] = BASE_DIR
+	this.Data["base_dir"] = this.BASE_DIR
 	this.TplName = "easyui/upload/index.tpl"
 }
 
@@ -40,15 +48,36 @@ func (this *UploadController) Upload() {
 	var filepath = this.GetString("path")
 	var dir = filepath
 	if dir == "" {
-		dir = BASE_DIR
+		dir = this.BASE_DIR
 	} else {
-		dir = path.Join(BASE_DIR, dir)
+		dir = path.Join(this.BASE_DIR, dir)
 	}
-
-	f, err := os.OpenFile(dir+"/"+fh.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	var filename = dir + "/" + fh.Filename
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
 	// beego.Error(2, err)
 	io.Copy(f, uploadFile)
-	defer f.Close()
+	var ext = path.Ext(path.Base(f.Name()))
+	beego.Debug("ext", ext)
+	var auto_unzip = this.GetString("auto_unzip")
+	var _, zipok = ZIPEXT[ext]
+	beego.Debug(auto_unzip, zipok)
+	f.Close()
+	if auto_unzip == "on" && zipok {
+		var comp compress.CompressTool
+		switch ext {
+		case ".zip":
+			comp = new(compress.ZipCompress)
+			break
+		}
+		if comp != nil {
+			beego.Debug("comp:", filename, dir)
+			if err := comp.Decompress(filename, dir+string(os.PathSeparator)); err == nil {
+				var err = os.Remove(filename)
+				beego.Error(err)
+			}
+		}
+	}
+	// defer f.Close()
 	defer uploadFile.Close()
 	this.ResponseJson(map[string]interface{}{
 		"status": 1,
@@ -66,7 +95,7 @@ func (this *UploadController) Dir() {
 	if path_name == "../" {
 		path_name = ""
 	}
-	path_name = path.Join(BASE_DIR, path_name)
+	path_name = path.Join(this.BASE_DIR, path_name)
 	fi_dir, err := os.Open(path_name)
 	if err != nil {
 		this.ResponseJson(map[string]interface{}{
@@ -104,7 +133,7 @@ func (this *UploadController) Down() {
 	if path_name == "../" {
 		path_name = ""
 	}
-	var fileFullPath = path.Join(BASE_DIR, path_name)
+	var fileFullPath = path.Join(this.BASE_DIR, path_name)
 	// beego.Debug(fileFullPath)
 
 	file, err := os.Open(fileFullPath)
