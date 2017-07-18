@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const BASE_DIR = "/Users/a1234/Downloads"
+const BASE_DIR = "D:\\LegendXie\\Ftp"
 
 type Files struct {
 	Path  string `json:"path"`
@@ -37,7 +37,8 @@ func (this *UploadController) Upload() {
 		return
 	}
 	// beego.Error(1, err)
-	var dir = this.GetString("path")
+	var filepath = this.GetString("path")
+	var dir = filepath
 	if dir == "" {
 		dir = BASE_DIR
 	} else {
@@ -49,7 +50,14 @@ func (this *UploadController) Upload() {
 	io.Copy(f, uploadFile)
 	defer f.Close()
 	defer uploadFile.Close()
-	this.ResponseJson(map[string]interface{}{})
+	this.ResponseJson(map[string]interface{}{
+		"status": 1,
+		"info":   "上传成功",
+		"data": map[string]interface{}{
+			"file": fh.Filename,
+			"path": filepath,
+		},
+	})
 }
 
 func (this *UploadController) Dir() {
