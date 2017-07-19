@@ -12,6 +12,7 @@ import (
 
 var ZIPEXT = map[string]bool{
 	".zip": true,
+	".rar": true,
 }
 
 type Files struct {
@@ -65,7 +66,7 @@ func (this *UploadController) Upload() {
 	if auto_unzip == "on" && zipok {
 		var comp compress.CompressTool
 		switch ext {
-		case ".zip":
+		case ".zip", ".rar":
 			comp = new(compress.ZipCompress)
 			break
 		}
@@ -73,6 +74,8 @@ func (this *UploadController) Upload() {
 			beego.Debug("comp:", filename, dir)
 			if err := comp.Decompress(filename, dir+string(os.PathSeparator)); err == nil {
 				var err = os.Remove(filename)
+				beego.Error(err)
+			} else {
 				beego.Error(err)
 			}
 		}
