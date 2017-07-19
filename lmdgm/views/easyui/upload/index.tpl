@@ -13,7 +13,7 @@ var loadTree = function(node, sub, reload){
     var level = parseInt(node.data('level'))
     $.post(URL + "/upload/dir", {path: path}, function(res){
         // console.log(res)
-        if (res.status == -1){
+        if (!res.status){
             alert(res.info);
             return
         }
@@ -89,7 +89,7 @@ $('#upload').form({
         success:function(data){
             data = JSON.parse(data)
             console.log(data)
-            if (data.status == -1){
+            if (!data.status){
                 alert(data.info)
                 return
             }

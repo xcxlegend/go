@@ -40,7 +40,7 @@ func (this *UploadController) Upload() {
 	// beego.Debug(f, fh, err)
 	if err != nil {
 		this.ResponseJson(map[string]interface{}{
-			"status": -1,
+			"status": false,
 			"info":   "文件不存在",
 		})
 		return
@@ -83,7 +83,7 @@ func (this *UploadController) Upload() {
 	// defer f.Close()
 	defer uploadFile.Close()
 	this.ResponseJson(map[string]interface{}{
-		"status": 1,
+		"status": true,
 		"info":   "上传成功",
 		"data": map[string]interface{}{
 			"file": fh.Filename,
@@ -102,7 +102,7 @@ func (this *UploadController) Dir() {
 	fi_dir, err := os.Open(path_name)
 	if err != nil {
 		this.ResponseJson(map[string]interface{}{
-			"status": -1,
+			"status": false,
 			"info":   "文件不存在",
 		})
 		return
@@ -112,7 +112,7 @@ func (this *UploadController) Dir() {
 	fis, err_readdir := fi_dir.Readdir(-1)
 	if err_readdir != nil {
 		this.ResponseJson(map[string]interface{}{
-			"status": -1,
+			"status": false,
 			"info":   "非文件夹",
 		})
 		return
@@ -125,7 +125,7 @@ func (this *UploadController) Dir() {
 		files = append(files, f)
 	}
 	this.ResponseJson(map[string]interface{}{
-		"status": 1,
+		"status": true,
 		"data":   files,
 	})
 }
