@@ -13,3 +13,11 @@ func (this *BaseController) ResponseJson(res interface{}) {
 	this.Data["json"] = res
 	this.ServeJSON()
 }
+
+func (this *BaseController) Rsp(status bool, info string) {
+	var res = map[string]interface{}{
+		"status": status,
+		"info":   info,
+	}
+	this.ResponseJson(res)
+}
