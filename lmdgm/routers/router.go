@@ -19,10 +19,14 @@ func init() {
 	beego.Router("/rbac/upload/post", &controllers.UploadController{}, "*:Upload")
 	beego.Router("/rbac/upload/down", &controllers.UploadController{}, "*:Down")
 
-	beego.Router("/rbac/sync/server", &controllers.SyncController{}, "*:Post")
+	// 列表
+	beego.Router("/rbac/sync/index", &controllers.SyncController{}, "*:Index")
+	// 发送同步命令
+	beego.Router("/rbac/sync/post", &controllers.SyncController{}, "*:Post")
+	// 获取进度
 	beego.Router("/rbac/sync/process", &controllers.SyncController{}, "*:GetProcess")
 
-	beego.Router("/rbac/sync/local", &controllers.SyncController{}, "*:Local")
+	// beego.Router("/rbac/sync/local", &controllers.SyncController{}, "*:Local")
 
 	// 外部接口 下载文件 ?file=
 	// beego.Router("/public/download", &controllers.DownController{}, "*:Index")
