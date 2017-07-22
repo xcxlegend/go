@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"io"
+
 	"github.com/astaxie/beego"
 	"github.com/xcxlegend/go/compress"
-	"io"
 	// "net/url"
 	"os"
 	"path"
@@ -12,13 +13,6 @@ import (
 
 var ZIPEXT = map[string]bool{
 	".zip": true,
-	".rar": true,
-}
-
-type Files struct {
-	Path  string `json:"path"`
-	IsDir bool   `json:"is_dir"`
-	Size  int64  `json:"size"`
 }
 
 type UploadController struct {

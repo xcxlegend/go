@@ -24,6 +24,11 @@ func init() {
 	beego.Router("/rbac/servers/del", &controllers.ServersController{}, "*:DelServer")
 	beego.Router("/rbac/servers/index", &controllers.ServersController{}, "*:Index")
 
+	beego.Router("/rbac/dir/conf", &controllers.DirController{}, "*:Conf")
+	beego.Router("/rbac/dir/upload_conf", &controllers.DirController{}, "*:UploadConf")
+	beego.Router("/rbac/dir/app", &controllers.DirController{}, "*:App")
+	beego.Router("/rbac/dir/file_content", &controllers.DirController{}, "*:FileContent")
+
 	// 列表
 	beego.Router("/rbac/sync/index", &controllers.SyncController{}, "*:Index")
 	// 发送同步命令

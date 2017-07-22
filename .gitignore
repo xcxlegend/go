@@ -1,5 +1,8 @@
-conf/*
+lmdgm
+/conf/*
 
 lmdgm
+/lmdgm
 
-lmdgm.exe
+lmdgm
+/lmdgm.exe
