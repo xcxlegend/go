@@ -10,7 +10,7 @@ import (
 type ZipCompress struct {
 }
 
-func (z *ZipCompress) Compress() error {
+func (z *ZipCompress) Compress(dirpath, dest string) error {
 	return nil
 }
 

@@ -27,6 +27,25 @@ type Files struct {
 	Childs         []*Files `json:"children"`
 }
 
+/**
+Len() int
+	// Less reports whether the element with
+	// index i should sort before the element with index j.
+	Less(i, j int) bool
+	// Swap swaps the elements with indexes i and j.
+	Swap(i, j int)
+*/
+
+// type FilesList []*Files
+
+// func (fs FilesList) Len() int {
+// 	return len(fs)
+// }
+
+// func (fs FilesList) Less(i, j int) bool {
+// 	return fs[i].ModTime <
+// }
+
 func NewFilesFromf(fi os.FileInfo, fpath string) *Files {
 	var f = new(Files)
 	f.IsDir = fi.IsDir()
@@ -97,6 +116,7 @@ func (this *BaseController) GetDirAllFiles(fpath string, revers_sort bool) ([]*F
 		this.getDirAllFiles(f)
 		files = append(files, f)
 	}
+	// sort.Sort()
 	if revers_sort && len(files) > 0 {
 		var revers_files = []*Files{}
 		for index := len(files) - 1; index >= 0; index-- {

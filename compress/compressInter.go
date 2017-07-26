@@ -1,6 +1,6 @@
 package compress
 
 type CompressTool interface {
-	Compress() error
+	Compress(dirpath, dest string) error
 	Decompress(zipFile, dest string) error
 }

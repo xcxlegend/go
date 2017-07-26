@@ -2,20 +2,22 @@ package lib
 
 import (
 	"crypto/md5"
-	"fmt"
+	"encoding/hex"
 	"io"
-	"os"
 )
 
 // FileMd5 计算文件md5值
-func FileMd5(f *os.File) (string, error) {
-	md5hash := md5.New()
-	if _, err := io.Copy(md5hash, f); err != nil {
-		// fmt.Println("Copy", err)
-		return "", err
-	}
+func FileMd5(f io.Reader) (string, error) {
+	md5Ctx := md5.New()
+	io.Copy(md5Ctx, f)
+	// beego.Debug("md5:", n, e)
+	cipherStr := md5Ctx.Sum(nil)
+	return hex.EncodeToString(cipherStr), nil
+}
 
-	var str = fmt.Sprintf("%x", md5hash.Sum(nil))
-	return str, nil
-
+func Md5ByByte(b []byte) string {
+	md5Ctx := md5.New()
+	md5Ctx.Write(b)
+	cipherStr := md5Ctx.Sum(nil)
+	return hex.EncodeToString(cipherStr)
 }

@@ -2,16 +2,18 @@ package ssh
 
 import (
 	"fmt"
-	"github.com/pkg/sftp"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"os"
 	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 type LoginOption struct {
 	User     string
-	Password string
+	Password string `json:"-"`
 	Host     string
 	Port     int
 }
@@ -23,6 +25,10 @@ type Client struct {
 
 func (this *Client) GetSftpClient() *sftp.Client {
 	return this.sftpClient
+}
+
+func (this *Client) GetSSHClient() *ssh.Client {
+	return this.sshClient
 }
 
 func NewClient(option *LoginOption) (*Client, error) {
@@ -46,11 +52,11 @@ func NewClient(option *LoginOption) (*Client, error) {
 			return nil
 		},
 	}
-	fmt.Println(auth)
+	// fmt.Println(auth)
 
 	// connet to ssh
 	addr = fmt.Sprintf("%s:%d", option.Host, option.Port)
-
+	// fmt.Println(addr)
 	if sshClient, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
 		return nil, err
 	}
@@ -64,6 +70,39 @@ func NewClient(option *LoginOption) (*Client, error) {
 	client.sftpClient = sftpClient
 	client.sshClient = sshClient
 	return client, nil
+}
+
+//ReadFile 读取文件内容
+func (this *Client) ReadFile(filepath string) ([]byte, error) {
+	var totalbuf = []byte{}
+	f, err := this.GetSftpClient().Open(filepath)
+	if err != nil {
+		return totalbuf, err
+	}
+	var buf = make([]byte, 1024)
+	for {
+		n, _ := f.Read(buf)
+		if n == 0 {
+			break
+		}
+		totalbuf = append(totalbuf, buf...)
+	}
+	return totalbuf, nil
+}
+
+//WriteFile 更新文件内容
+func (this *Client) WriteFile(filepath, content string) error {
+	f, err := this.GetSftpClient().Create(filepath)
+	if err != nil {
+		beego.Error(f, err)
+		return err
+	}
+	if n, err := f.Write([]byte(content)); err != nil {
+		beego.Error(n, err)
+		return err
+	}
+	beego.Debug("update:", filepath, content)
+	return nil
 }
 
 /**
@@ -95,4 +134,35 @@ func (this *Client) Upload(localfile, dest string) error {
 		dstFile.Write(buf)
 	}
 	return nil
+}
+
+type SyncStdout struct {
+	c chan []byte
+}
+
+func NewSyncStdout() *SyncStdout {
+	// var c = make(chan []byte, 1024)
+	return &SyncStdout{make(chan []byte, 1024)}
+}
+func (s *SyncStdout) Write(p []byte) (n int, err error) {
+	go func() {
+		s.c <- p
+	}()
+	return len(p), nil
+}
+
+func (s *SyncStdout) Read() []byte {
+	// select {
+	// case r := <-r.c:
+	// 	return r
+	// 	break
+	// case <-time.After(3 * time.Second):
+	// 	break
+	// }
+
+	return <-s.c
+}
+
+func (s *SyncStdout) Close() {
+	close(s.c)
 }
