@@ -9,6 +9,8 @@ import (
 
 	"strings"
 
+	"sort"
+
 	"github.com/beego/admin/src/rbac"
 )
 
@@ -36,15 +38,19 @@ Len() int
 	Swap(i, j int)
 */
 
-// type FilesList []*Files
+type FilesList []*Files
 
-// func (fs FilesList) Len() int {
-// 	return len(fs)
-// }
+func (fs FilesList) Len() int {
+	return len(fs)
+}
 
-// func (fs FilesList) Less(i, j int) bool {
-// 	return fs[i].ModTime <
-// }
+func (fs FilesList) Less(i, j int) bool {
+	return fs[i].ModTime < fs[j].ModTime
+}
+
+func (fs FilesList) Swap(i, j int) {
+	fs[i], fs[j] = fs[j], fs[i]
+}
 
 func NewFilesFromf(fi os.FileInfo, fpath string) *Files {
 	var f = new(Files)
@@ -101,7 +107,7 @@ func (this *BaseController) GetDirFiles(fpath string, revers_sort bool) ([]*File
 }
 
 func (this *BaseController) GetDirAllFiles(fpath string, revers_sort bool) ([]*Files, error) {
-	var files = []*Files{}
+	var files = FilesList{}
 	fi_dir, err := os.Open(fpath)
 	if err != nil {
 		return files, err
@@ -116,7 +122,7 @@ func (this *BaseController) GetDirAllFiles(fpath string, revers_sort bool) ([]*F
 		this.getDirAllFiles(f)
 		files = append(files, f)
 	}
-	// sort.Sort()
+	sort.Sort(files)
 	if revers_sort && len(files) > 0 {
 		var revers_files = []*Files{}
 		for index := len(files) - 1; index >= 0; index-- {
