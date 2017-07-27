@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	const VERSION = "1.1.0"
 	// if beego.BConfig.RunMode == "dev"  {
 	beego.BConfig.WebConfig.DirectoryIndex = true
 	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"

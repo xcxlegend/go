@@ -20,7 +20,7 @@ func init() {
 	beego.Router("/rbac/upload/down", &controllers.UploadController{}, "*:Down")
 
 	// 服务器管理
-	beego.Router("/rbac/Rediss/add", &controllers.ServersController{}, "*:AddServer")
+	beego.Router("/rbac/servers/add", &controllers.ServersController{}, "*:AddServer")
 	beego.Router("/rbac/servers/update", &controllers.ServersController{}, "*:UpdateServer")
 	beego.Router("/rbac/servers/del", &controllers.ServersController{}, "*:DelServer")
 	beego.Router("/rbac/servers/index", &controllers.ServersController{}, "*:Index")
@@ -30,6 +30,10 @@ func init() {
 	beego.Router("/rbac/servers/ssh/mount", &controllers.ServersController{}, "*:SSHMount")
 	beego.Router("/rbac/servers/conf_content", &controllers.ServersController{}, "*:GetConfContent")
 	beego.Router("/rbac/servers/update_conf", &controllers.ServersController{}, "*:UpdateConfContent")
+
+	beego.Router("/rbac/servers/terminal", &controllers.ServersController{}, "*:Terminal")
+
+	beego.Router("/rbac/ssh/ws", &controllers.WSController{}, "*:Get")
 
 	beego.Router("/rbac/dir/index", &controllers.DirController{}, "*:Index")
 	beego.Router("/rbac/dir/conf", &controllers.DirController{}, "*:Conf")
