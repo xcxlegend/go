@@ -1,5 +1,6 @@
 package main
 
+/*
 import "fmt"
 
 // "github.com/antlinker/go-dirtyfilter"
@@ -25,3 +26,4 @@ func main() {
 	var mess = "ab"
 	fmt.Println(mess)
 }
+*/
