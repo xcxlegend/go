@@ -1,4 +1,5 @@
 {{template "../public/header.tpl"}}
+<script type="text/javascript" src="/static/js/md5.js"></script>
 <script type="text/javascript">
 $(function(){
 
@@ -7,12 +8,12 @@ var URL="/rbac"
 
 var BASE_DIR = "{{.base_dir}}"
 
-var loadTree = function(node, sub){
+var loadTree = function(node, sub, reload){
     var path = node.data("path")
     var level = parseInt(node.data('level'))
     $.post(URL + "/upload/dir", {path: path}, function(res){
         // console.log(res)
-        if (res.status == -1){
+        if (!res.status){
             alert(res.info);
             return
         }
@@ -34,11 +35,14 @@ var loadTree = function(node, sub){
                 var classname = "tree-icon tree-file"
                 var is_dir = 0
             }
-            
-            var shtml = '<li class="tree-no-li"><div data-loaded="false" data-level="'+(level+1)+'" data-size="'+e.size+'" data-open="false" data-isdir="'+is_dir+'" data-path="'+path+'/'+e.path+'" class="tree-node" style="cursor: pointer;">'+indexhtml+'<span class="'+classname+'"></span><span class="tree-title">'+e.path+'</span></div></li>';
+            var filepath = path + '/' + e.path
+            var shtml = '<li class="tree-no-li"><div id="node_'+md5(filepath)+'" data-loaded="false" data-level="'+(level+1)+'" data-size="'+e.size+'" data-open="false" data-isdir="'+is_dir+'" data-path="'+filepath+'" class="tree-node" style="cursor: pointer;">'+indexhtml+'<span class="'+classname+'"></span><span class="tree-title">'+e.path+'</span></div></li>';
             // console.log(html);
             html += shtml
         }) 
+         if (reload){
+            $(node).parent('li').find('ul').remove();
+        }
         if (sub){
             html += "</ul>"
             $(node).parent('li').append(html);
@@ -80,6 +84,34 @@ var loadTree = function(node, sub){
 
 
 loadTree($('#tree'), false);
+    
+$('#upload').form({
+        success:function(data){
+            data = JSON.parse(data)
+            console.log(data)
+            if (!data.status){
+                alert(data.info)
+                return
+            }
+            if (data.data.path == ""){
+                $('#tree').html('<li class="tree-no-li"><div id="node_root" data-isdir="true"  data-loaded="true" data-path="" class="tree-node" style="cursor: pointer;"><span class="tree-icon tree-folder"></span><span class="tree-title">./</span></div></li>');
+                loadTree($('#tree'), false, true);
+            }else{
+                var node = $('#node_'+md5(data.data.path))
+                console.log(node)
+                loadTree(node, true, true)
+            }
+        }
+    });
+
+
+function reload() {
+    $('#tree').html('<li class="tree-no-li"><div id="node_root" data-isdir="true"  data-loaded="true" data-path="" class="tree-node" style="cursor: pointer;"><span class="tree-icon tree-folder"></span><span class="tree-title">./</span></div></li>');
+    loadTree($('#tree'), false, true);
+}
+
+$('#reload').click(reload);
+
 
 })
 
@@ -92,6 +124,8 @@ function downfile(){
     }
     window.location.href = URL + '/upload/down?path='+path;
 }
+
+
 
 </script>
 
@@ -119,10 +153,12 @@ function downfile(){
 }
 </style>
 <body class="easyui-layout" style="text-align:left">
+<select>
+    <option value="upload/post">11</option>
+</select>
 <div region="west" border="false" split="true" title="目录"  tools="#toolbar" style="width:200px;padding:5px;">
     <ul id="tree" class="tree" data-level="0" data-path="">
-        <li class="tree-no-li"><div data-isdir="true" data-path="" class="tree-node" style="cursor: pointer;"><span class="tree-icon tree-folder"></span><span class="tree-title">./</span></div></li>
-
+        <li class="tree-no-li"><div id="node_root" data-isdir="true"  data-loaded="true" data-path="" class="tree-node" style="cursor: pointer;"><span class="tree-icon tree-folder"></span><span class="tree-title">./</span></div></li>
     </ul>
 </div>
 <div region="center" border="false" >
@@ -142,14 +178,19 @@ function downfile(){
                 </tr>
 
                 <tr>
-                    <td>选择文件:</td>
+                    <td>上传自动是否解压: (仅支持 .zip 文件)</td>
+                    <td><input type="checkbox" class="easyui-textbox" name="auto_unzip"></input></td>
+                </tr>
+
+                <tr>
+                    <td>选择文件: (外部下载地址参数file=)</td>
                    <td><input readonly="" id="form-file" class="easyui-textbox" type="text" name="file" data-options="required:true"></input></td>
                 </tr>
                  
             </table>
         </form>
         <div style="text-align:center;padding:5px">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#upload').form('submit')">上传</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#upload').submit()">上传</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="downfile()">下载</a>
         </div>
          
@@ -158,6 +199,7 @@ function downfile(){
     </div>
 </div>
 <div id="toolbar">
+<a href="#" class="icon-reload" id="reload" title="全部刷新"></a>
 </div>
 </body>
 </html>

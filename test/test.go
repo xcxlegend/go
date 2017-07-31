@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"bufio"
 	"encoding/json"
@@ -87,3 +88,4 @@ func MapReduce(file string, c chan ReduceMap, ws *sync.WaitGroup) {
 	}
 	c <- m
 }
+*/

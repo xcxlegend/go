@@ -1,11 +1,18 @@
 package main
 
 import (
-	_ "github.com/xcxlegend/go/lmdgm/routers"
 	"github.com/astaxie/beego"
+	_ "github.com/xcxlegend/go/lmdgm/models"
+	_ "github.com/xcxlegend/go/lmdgm/routers"
+	_ "github.com/xcxlegend/go/lmdgm/servers"
 )
 
+const VERSION = "1.1.3"
+
 func main() {
+	// if beego.BConfig.RunMode == "dev"  {
+	beego.BConfig.WebConfig.DirectoryIndex = true
+	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
+	// }
 	beego.Run()
 }
-
