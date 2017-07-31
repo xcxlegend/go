@@ -14,6 +14,39 @@ import (
 	"github.com/beego/admin/src/rbac"
 )
 
+const (
+	DBLOGNODEREMARK_TPL_UPLOAD_POST = `上传了文件: %s To: %s/`
+	DBLOGNODEREMARK_TPL_SERVER_ADD  = `添加了服务器: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_UPDATE = `更新了服务器: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_DEL = `删除了服务器: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_SSH_MOUNT = `对服务器运行命令: 硬盘挂载: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_SSH_START = `对服务器运行命令: 开启应用: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_SSH_CLOSE = `对服务器运行命令: 关闭应用: 
+	%s`
+	DBLOGNODEREMARK_TPL_SERVER_SSH_EDIT_JSON = `对服务器运行命令: 编辑配置文件: \r\n
+	id: %v,
+	host: "%s",
+	file: "%s",
+	content: "%s",
+	update: "%s"
+	`
+	DBLOGNODEREMARK_TPL_DIR_UPLOAD_CONF = `上传了配置文件到: dir: "%s"`
+	DBLOGNODEREMARK_TPL_DIR_UPLOAD_APP  = `上传了应用文件到: dir: "%s"`
+	DBLOGNODEREMARK_TPL_SYNC_CONF       = `分发了配置文件IN DIR: "%s" 到服务器: %v`
+	DBLOGNODEREMARK_TPL_SYNC_APP        = `分发了应用文件IN DIR: "%s" 到服务器: %v`
+	DBLOGNODEREMARK_TPL_REDIS_ADD       = `添加了REDIS: 
+	%s`
+	DBLOGNODEREMARK_TPL_REDIS_UPDATE = `更新了REDIS: 
+	%s`
+	DBLOGNODEREMARK_TPL_REDIS_DEL = `删除了REDIS: 
+	%s`
+)
+
 type BaseController struct {
 	rbac.CommonController
 }

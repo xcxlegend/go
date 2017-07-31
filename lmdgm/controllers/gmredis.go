@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/beego/admin/src/models"
 	m "github.com/xcxlegend/go/lmdgm/models"
 )
 
@@ -52,6 +53,7 @@ func (this *GMRedisController) AddRedis() {
 	}
 	id, err := m.AddRedis(&s)
 	if err == nil && id > 0 {
+		this.DBLogTplData(models.LOGNODE_REDIS_ADD, DBLOGNODEREMARK_TPL_REDIS_ADD, &s)
 		this.Rsp(true, "Success")
 		return
 	}
@@ -63,8 +65,10 @@ func (this *GMRedisController) AddRedis() {
 //DelRedis 删除
 func (this *GMRedisController) DelRedis() {
 	Id, _ := this.GetInt64("Id")
+	var old = m.GetRedisById(Id)
 	status, err := m.DelRedisById(Id)
 	if err == nil && status > 0 {
+		this.DBLogTplData(models.LOGNODE_REDIS_DEL, DBLOGNODEREMARK_TPL_REDIS_DEL, &old)
 		this.Rsp(true, "Success")
 		return
 	}
@@ -80,13 +84,18 @@ func (this *GMRedisController) UpdateRedis() {
 		this.Rsp(false, err.Error())
 		return
 	}
-
+	var o = m.GetRedisById(s.Id)
 	id, err := m.UpdateRedis(&s)
 	if err != nil {
 		this.Rsp(false, err.Error())
 		return
 	}
 	if id > 0 {
+		var log = map[string]interface{}{
+			"old":    &o,
+			"update": this.Input(),
+		}
+		this.DBLogTplData(models.LOGNODE_REDIS_DEL, DBLOGNODEREMARK_TPL_REDIS_DEL, log)
 		this.Rsp(true, "Success")
 		return
 	}

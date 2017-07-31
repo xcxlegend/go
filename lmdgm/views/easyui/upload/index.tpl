@@ -153,6 +153,9 @@ function downfile(){
 }
 </style>
 <body class="easyui-layout" style="text-align:left">
+<select>
+    <option value="upload/post">11</option>
+</select>
 <div region="west" border="false" split="true" title="目录"  tools="#toolbar" style="width:200px;padding:5px;">
     <ul id="tree" class="tree" data-level="0" data-path="">
         <li class="tree-no-li"><div id="node_root" data-isdir="true"  data-loaded="true" data-path="" class="tree-node" style="cursor: pointer;"><span class="tree-icon tree-folder"></span><span class="tree-title">./</span></div></li>

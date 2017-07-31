@@ -5,6 +5,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/beego/admin/src/models"
+
 	// "github.com/astaxie/beego"
 	"io"
 
@@ -93,7 +95,7 @@ func (this *SyncController) UploadApp() {
 	var dir = "D:\\LegendXie\\Ftp"
 
 	var filename = dir + "/" + fh.Filename
-	f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
+	f, err := os.Create(filename) //  OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
 	// beego.Error(2, err)
 
 	io.Copy(f, uploadFile)
@@ -238,7 +240,9 @@ func (this *SyncController) SyncApp() {
 		Options:   []*servers.SyncTaskOption{},
 		GroupCode: GROUP_CODE_APP,
 	}
+	var logServerHosts = []string{}
 	for _, server := range allServer {
+		logServerHosts = append(logServerHosts, server.OutHost)
 		var serverOption = &ssh.LoginOption{
 			Host:     server.Host,
 			Port:     server.Port,
@@ -269,6 +273,7 @@ func (this *SyncController) SyncApp() {
 		return
 	}
 
+	this.DBLogTpl(models.LOGNODE_SYNC_APP, DBLOGNODEREMARK_TPL_SYNC_APP, dir, logServerHosts)
 	// beego.Debug(fs)
 	this.ResponseJson(map[string]interface{}{
 		"status": true,
@@ -312,7 +317,9 @@ func (this *SyncController) SyncConf() {
 		Options:   []*servers.SyncTaskOption{},
 		GroupCode: GROUP_CODE_CONF,
 	}
+	var logServerHosts = []string{}
 	for _, server := range allServer {
+		logServerHosts = append(logServerHosts, server.OutHost)
 		var serverOption = &ssh.LoginOption{
 			Host:     server.Host,
 			Port:     server.Port,
@@ -363,7 +370,7 @@ func (this *SyncController) SyncConf() {
 		})
 		return
 	}
-
+	this.DBLogTpl(models.LOGNODE_SYNC_CONF, DBLOGNODEREMARK_TPL_SYNC_CONF, dir, logServerHosts)
 	// beego.Debug(fs)
 	this.ResponseJson(map[string]interface{}{
 		"status": true,

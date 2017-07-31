@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/beego/admin/src/models"
+
 	"time"
 
 	"encoding/json"
@@ -65,12 +67,13 @@ func (this *DirController) UploadConf() {
 	}
 	// beego.Error(1, err)
 	var base = beego.AppConfig.String("path.conf.base")
-	var dir = path.Join(base, time.Now().Format("20060102150405"))
+	var creataDir = time.Now().Format("20060102150405")
+	var dir = path.Join(base, creataDir)
 
 	os.Mkdir(dir, 0666)
 
 	var filename = path.Join(dir, fh.Filename)
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.Create(filename) // OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
 	// beego.Error(2, err)
 	io.Copy(f, uploadFile)
 	f.Close()
@@ -127,6 +130,7 @@ func (this *DirController) UploadConf() {
 	// #todo conf.tar.gz const
 	err = comp.Compress(dir, path.Join(dir, "conf.tar.gz"))
 
+	this.DBLogTpl(models.LOGNODE_DIR_UPLOAD_CONF, DBLOGNODEREMARK_TPL_DIR_UPLOAD_CONF, creataDir)
 	// beego.Error(err)
 	this.ResponseJson(map[string]interface{}{
 		"status": true,
@@ -160,18 +164,21 @@ func (this *DirController) UploadApp() {
 
 	// beego.Error(1, err)
 	var base = beego.AppConfig.String("path.app.base")
-	var dir = path.Join(base, time.Now().Format("20060102150405"))
+	var creataDir = time.Now().Format("20060102150405")
+	var dir = path.Join(base, creataDir)
 
 	os.Mkdir(dir, 0666)
 
 	var filename = path.Join(dir, fh.Filename)
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.Create(filename) //  OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
 	// beego.Error(2, err)
 	io.Copy(f, uploadFile)
 	f.Close()
 
 	// defer f.Close()
 	defer uploadFile.Close()
+
+	this.DBLogTpl(models.LOGNODE_DIR_UPLOAD_APP, DBLOGNODEREMARK_TPL_DIR_UPLOAD_APP, creataDir)
 	this.ResponseJson(map[string]interface{}{
 		"status": true,
 		"info":   "上传成功",

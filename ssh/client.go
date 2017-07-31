@@ -21,6 +21,7 @@ type LoginOption struct {
 type Client struct {
 	sshClient  *ssh.Client
 	sftpClient *sftp.Client
+	Option     *LoginOption
 }
 
 func (this *Client) GetSftpClient() *sftp.Client {
@@ -69,6 +70,7 @@ func NewClient(option *LoginOption) (*Client, error) {
 	var client = new(Client)
 	client.sftpClient = sftpClient
 	client.sshClient = sshClient
+	client.Option = option
 	return client, nil
 }
 
@@ -85,7 +87,7 @@ func (this *Client) ReadFile(filepath string) ([]byte, error) {
 		if n == 0 {
 			break
 		}
-		totalbuf = append(totalbuf, buf...)
+		totalbuf = append(totalbuf, buf[0:n]...)
 	}
 	return totalbuf, nil
 }
@@ -101,7 +103,7 @@ func (this *Client) WriteFile(filepath, content string) error {
 		beego.Error(n, err)
 		return err
 	}
-	beego.Debug("update:", filepath, content)
+	// beego.Debug("update:", filepath, content)
 	return nil
 }
 

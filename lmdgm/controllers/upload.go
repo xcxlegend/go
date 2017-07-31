@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/astaxie/beego"
+	"github.com/beego/admin/src/models"
 	"github.com/xcxlegend/go/compress"
 	// "net/url"
 	"os"
@@ -31,7 +33,7 @@ func (this *UploadController) Index() {
 
 func (this *UploadController) Upload() {
 	var uploadFile, fh, err = this.GetFile("file")
-	// beego.Debug(f, fh, err)
+	beego.Debug(uploadFile, fh.Filename, err)
 	if err != nil {
 		this.ResponseJson(map[string]interface{}{
 			"status": false,
@@ -47,10 +49,18 @@ func (this *UploadController) Upload() {
 	} else {
 		dir = path.Join(this.BASE_DIR, dir)
 	}
-	var filename = dir + "/" + fh.Filename
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0666)
-	// beego.Error(2, err)
+	var fhfilename = strings.Replace(fh.Filename, "\\", "/", -1)
+	var filename = dir + "/" + path.Base(fhfilename)
+	f, err := os.Create(filename) //  OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		this.ResponseJson(map[string]interface{}{
+			"status": false,
+			"info":   "服务器错误:路径错误",
+		})
+		return
+	}
 	io.Copy(f, uploadFile)
+	// beego.Error(n, err, filename, path.Base(fh.Filename))
 	var ext = path.Ext(path.Base(f.Name()))
 	beego.Debug("ext", ext)
 	var auto_unzip = this.GetString("auto_unzip")
@@ -76,6 +86,8 @@ func (this *UploadController) Upload() {
 	}
 	// defer f.Close()
 	defer uploadFile.Close()
+
+	this.DBLog(models.LOGNODE_UPLOAD_POST, fmt.Sprintf(DBLOGNODEREMARK_TPL_UPLOAD_POST, fh.Filename, filepath))
 	this.ResponseJson(map[string]interface{}{
 		"status": true,
 		"info":   "上传成功",
@@ -118,6 +130,7 @@ func (this *UploadController) Dir() {
 		f.Size = fi.Size()
 		files = append(files, f)
 	}
+
 	this.ResponseJson(map[string]interface{}{
 		"status": true,
 		"data":   files,

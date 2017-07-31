@@ -3,6 +3,8 @@ package controllers
 import (
 	"regexp"
 
+	"github.com/beego/admin/src/models"
+
 	"fmt"
 
 	"strings"
@@ -104,6 +106,10 @@ func (this *ServersController) AddServer() {
 
 	id, err := m.AddServer(&s)
 	if err == nil && id > 0 {
+
+		s.Id = id
+		this.DBLogTplData(models.LOGNODE_SERVER_ADD, DBLOGNODEREMARK_TPL_SERVER_ADD, &s)
+		// this.DBLog(models.LOGNODE_SERVER_ADD, fmt.Sprintf(DBLOGNODEREMARK_TPL_SERVER_ADD, log))
 		this.Rsp(true, "Success")
 		return
 	}
@@ -115,8 +121,10 @@ func (this *ServersController) AddServer() {
 //DelServer 删除
 func (this *ServersController) DelServer() {
 	Id, _ := this.GetInt64("Id")
+	var old = m.GetServerById(Id)
 	status, err := m.DelServerById(Id)
 	if err == nil && status > 0 {
+		this.DBLogTplData(models.LOGNODE_SERVER_DEL, DBLOGNODEREMARK_TPL_SERVER_DEL, &old)
 		this.Rsp(true, "Success")
 		return
 	}
@@ -157,6 +165,11 @@ func (this *ServersController) UpdateServer() {
 		return
 	}
 	if id > 0 {
+		var log = map[string]interface{}{
+			"old":    &o,
+			"update": this.Input(),
+		}
+		this.DBLogTplData(models.LOGNODE_SERVER_UPDATE, DBLOGNODEREMARK_TPL_SERVER_UPDATE, log)
 		this.Rsp(true, "Success")
 		return
 	}
@@ -166,7 +179,7 @@ func (this *ServersController) UpdateServer() {
 
 //getServerHost 获取内网ip
 func (this *ServersController) getServerHost(s *m.Server) {
-	beego.Debug(s)
+	// beego.Debug(s)
 	var c, err = ssh.NewClient(&ssh.LoginOption{
 		User:     s.LoginUserName,
 		Password: s.LoginPassword,
@@ -272,6 +285,12 @@ func (this *ServersController) SSHClosePid() {
 	}
 	defer sess.Close()
 	sess.Run(fmt.Sprintf("kill %s", pid))
+	var log = map[string]interface{}{
+		"id":      serv.Id,
+		"host":    serv.OutHost,
+		"confile": this.GetString("confile"),
+	}
+	this.DBLogTplData(models.LOGNODE_SERVER_SSH_CLOSE, DBLOGNODEREMARK_TPL_SERVER_SSH_CLOSE, log)
 	this.Rsp(true, "run over")
 }
 
@@ -320,9 +339,14 @@ func (this *ServersController) SSHStartApp() {
 		beego.AppConfig.String("server.app.name"),
 		confile,
 	))
-	beego.Error(err)
+	// beego.Error(err)
 	// }()
-
+	var log = map[string]interface{}{
+		"id":      serv.Id,
+		"host":    serv.OutHost,
+		"confile": this.GetString("confile"),
+	}
+	this.DBLogTplData(models.LOGNODE_SERVER_SSH_START, DBLOGNODEREMARK_TPL_SERVER_SSH_START, log)
 	this.Rsp(true, "run over")
 }
 
@@ -350,8 +374,9 @@ func (this *ServersController) SSHMount() {
 		this.Rsp(false, "server error")
 		return
 	}
-	var ret = this.RunCmdAndRead(c, `mkfs.ext4 /dev/vdb && mkdir -p /data && mount /dev/vdb /data && echo "/dev/vdb /data ext4 defaults 0 0">>/etc/fstab`)
-	beego.Debug("ret:", ret)
+	this.RunCmdAndRead(c, `mkfs.ext4 /dev/vdb && mkdir -p /data && mount /dev/vdb /data && echo "/dev/vdb /data ext4 defaults 0 0">>/etc/fstab`)
+	// beego.Debug("ret:", ret)
+	this.DBLogTplData(models.LOGNODE_SERVER_SSH_MOUNT, DBLOGNODEREMARK_TPL_SERVER_SSH_MOUNT, &serv)
 	this.Rsp(true, "run over")
 }
 
@@ -404,11 +429,26 @@ func (this *ServersController) UpdateConfContent() {
 	}
 
 	var filepath = path.Join(beego.AppConfig.String("server.path.conf.base"), filename)
-	beego.Debug("file:", filepath)
+	// beego.Debug("file:", filepath)
+	var f, _ = c.ReadFile(filepath)
 	if err := c.WriteFile(filepath, content); err != nil {
 		this.Rsp(false, err.Error())
 		return
 	}
+	// var log = map[string]interface{}{
+	// 	"id":      id,
+	// 	"host":    c.Option.Host,
+	// 	"content": strings.TrimSpace(string(f)),
+	// 	"update":  content,
+	// }
+	this.DBLogTpl(models.LOGNODE_SERVER_SSH_EDIT_JSON, DBLOGNODEREMARK_TPL_SERVER_SSH_EDIT_JSON,
+		id,
+		c.Option.Host,
+		filename,
+		string(f),
+		content,
+	)
+	// this.DBLogTplData(models.LOGNODE_SERVER_SSH_EDIT_JSON, DBLOGNODEREMARK_TPL_SERVER_SSH_EDIT_JSON, log)
 	this.Rsp(true, "")
 }
 
@@ -418,7 +458,7 @@ func getSSHClientByServerId(id int64) (*ssh.Client, error) {
 		// this.Rsp(false, "server error")
 		return nil, errors.New("server error")
 	}
-	beego.Debug("serv:", serv)
+	// beego.Debug("serv:", serv)
 	var c, err = ssh.NewClient(&ssh.LoginOption{
 		User:     serv.LoginUserName,
 		Password: serv.LoginPassword,

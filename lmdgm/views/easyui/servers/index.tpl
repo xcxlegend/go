@@ -351,7 +351,7 @@
             vac.alert("请选择要操作的行");
             return;
         }
-        $.post(URL + '/ssh/close', {id: row.server_id, pid: row.pid}, function(res){
+        $.post(URL + '/ssh/close', {id: row.server_id, pid: row.pid, confile: row.confile }, function(res){
             $("#datagrid_run").datagrid("reload")
         })
     }

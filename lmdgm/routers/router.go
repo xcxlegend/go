@@ -48,6 +48,8 @@ func init() {
 	beego.Router("/rbac/redis/del", &controllers.GMRedisController{}, "*:DelRedis")
 	beego.Router("/rbac/redis/index", &controllers.GMRedisController{}, "*:Index")
 
+	beego.Router("/rbac/log/index", &controllers.LogController{}, "*:Index")
+
 	// 列表
 	beego.Router("/rbac/sync/index", &controllers.SyncController{}, "*:Index")
 	// 发送同步命令
