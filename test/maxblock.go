@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/xcxlegend/go/lib"
 )
 
 type Point struct {
@@ -11,36 +13,51 @@ type Point struct {
 }
 
 var canvas = [][]int{
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
-	{1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+// {1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
 }
 
 var zeros = [][]int{}
 var zeroMap = map[int]map[int]bool{}
 
-func createRandCube() {
-
+func createRandCube(len int) {
+	// var all = len * len
+	const zerorate = 100 //| 1000
+	for i := 0; i < len; i++ {
+		var row = []int{}
+		for j := 0; j < len; j++ {
+			var r = lib.Rand(0, 1000)
+			var n = 1
+			if r < zerorate {
+				n = 0
+			}
+			row = append(row, n)
+		}
+		canvas = append(canvas, row)
+	}
 }
 
 func main() {
+	// fmt.Println(2 ^ 3)
+	createRandCube(20)
 	outshow(canvas)
 	var start = time.Now().UnixNano()
 	findZeroPoint()
@@ -117,21 +134,30 @@ func findMaxBlock() {
 	for x := 0; x < count-1; x++ {
 		// 如果最大的已经超过离底线的距离 则不继续计算
 		if blockMax > count-x {
-			break
+			// break
 		}
 		var row = canvas[x]
 		var zeroI = 0
 		// 循环一行
 		for y := 0; y < len(row)-1; y++ {
 			var p = row[y]
+			if p == 0 {
+				continue
+			}
 			var max int
 			// fmt.Println(x)
 			if len(zeros[x]) > zeroI {
 				// fmt.Println(zeros[x], zeroI)
 				max = zeros[x][zeroI] - y
-				zeroI++
+				// zeroI++
+				// if x == 14 {
+				// 	fmt.Println("0: ", x, y, zeros[x], zeroI, max)
+				// }
 			} else {
 				max = len(row) - y
+				// if x == 14 {
+				// 	// fmt.Println("end: ", x, y, max)
+				// }
 			}
 
 			if max > count-x {
@@ -139,27 +165,39 @@ func findMaxBlock() {
 			}
 
 			if max <= p {
-				continue
-			}
-			var colmax, newY = findColMax2(x, y, max)
-			max = min(colmax, max)
-			// for i = 0; i < max; i++ {
-			// if x+i == count-1 || y+i == len(row)-1 ||
-			// 	checkZero(x+i+1, y+i+1) ||
-			// 	checkZero(x+i, y+i+1) ||
-			// 	checkZero(x+i+1, y+i) {
-			// 	break
-			// }
-			// }
-			// max = i
-			if max > 1 {
-				if max > blockMax {
-					blockMax = max
+				/* if len(zeros[x]) > zeroI {
+					y = zeros[x][zeroI]
+				}  */ /* else if y+max < len(row) {
+					y = y + max
+				} else {
+					break
+				} */
+			} else {
+				var colmax, newY = findColMax2(x, y, max)
+				// newY--
+				// fmt.Println(x, y, colmax, max, newY)
+				max = min(colmax, max)
+				// for i = 0; i < max; i++ {
+				// if x+i == count-1 || y+i == len(row)-1 ||
+				// 	checkZero(x+i+1, y+i+1) ||
+				// 	checkZero(x+i, y+i+1) ||
+				// 	checkZero(x+i+1, y+i) {
+				// 	break
+				// }
+				// }
+				// max = i
+				if max > 1 {
+					if max > blockMax {
+						blockMax = max
+					}
+					flushPointMaxNumber(x, y, max)
 				}
-				flushPointMaxNumber(x, y, max)
+				if newY < count-1 {
+					y = newY
+				}
 			}
-			if newY < count-1 {
-				x = newY
+			if len(zeros[x]) > zeroI && zeros[x][zeroI] == y {
+				zeroI++
 			}
 		}
 	}
@@ -181,7 +219,7 @@ func findColMax2(x, y, max int) (int, int) {
 	// 2. in line > max return max
 	var colmax = 1
 	var zeroy = y + max
-	for _, z := range zeros[x+1 : x+max-1] {
+	for _, z := range zeros[x+1 : x+max] {
 		var done = false
 		if len(z) > 0 {
 			for _, j := range z {
@@ -207,12 +245,11 @@ func findColMax2(x, y, max int) (int, int) {
 					break
 				}
 			}
-		} else {
-			colmax++
 		}
 		if done {
 			break
 		}
+		colmax++
 	}
 	return colmax, zeroy
 }
@@ -279,7 +316,7 @@ func addOne(canvas [][]int, x, y, max int) {
 
 func outshow(vec [][]int) {
 	for _, l := range vec {
-		fmt.Println(l)
+		fmt.Printf("%2v\r\n", l)
 	}
 }
 
