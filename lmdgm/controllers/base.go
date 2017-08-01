@@ -45,6 +45,12 @@ const (
 	%s`
 	DBLOGNODEREMARK_TPL_REDIS_DEL = `删除了REDIS: 
 	%s`
+	DBLOGNODEREMARK_TPL_CONFIG_ADD = `添加了CONFIG: 
+	%s`
+	DBLOGNODEREMARK_TPL_CONFIG_UPDATE = `更新了CONFIG: 
+	%s`
+	DBLOGNODEREMARK_TPL_CONFIG_DEL = `删除了CONFIG: 
+	%s`
 )
 
 type BaseController struct {
