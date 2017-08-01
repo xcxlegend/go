@@ -260,7 +260,10 @@ func (this *SyncTask) handle(option *SyncTaskOption, schedule *SyncTaskSchedule,
 	if err != nil {
 		// beego.Error(err)
 	}
-	c.GetSftpClient().Remove(option.Destfile)
+	err = c.GetSftpClient().Remove(option.Destfile)
+	if err != nil {
+		beego.Error(err)
+	}
 	dstFile, err := c.GetSftpClient().Create(option.Destfile)
 
 	if err != nil {
