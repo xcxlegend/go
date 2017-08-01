@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 type Point struct {
@@ -35,9 +36,18 @@ var canvas = [][]int{
 var zeros = [][]int{}
 var zeroMap = map[int]map[int]bool{}
 
-func main() {
+func createRandCube() {
 
+}
+
+func main() {
+	outshow(canvas)
+	var start = time.Now().UnixNano()
+	findZeroPoint()
+	// fmt.Println(zeros)
 	findMaxBlock()
+	fmt.Println((time.Now().UnixNano() - start) / 1e3)
+	outshow(canvas)
 	/* var row = len(canvas)
 	fmt.Println(row)
 	outshow(canvas)
@@ -103,6 +113,7 @@ func main() {
 func findMaxBlock() {
 	var count = len(canvas)
 	var blockMax = 1
+	// 开始从0,0开始循环
 	for x := 0; x < count-1; x++ {
 		// 如果最大的已经超过离底线的距离 则不继续计算
 		if blockMax > count-x {
@@ -110,10 +121,13 @@ func findMaxBlock() {
 		}
 		var row = canvas[x]
 		var zeroI = 0
+		// 循环一行
 		for y := 0; y < len(row)-1; y++ {
 			var p = row[y]
 			var max int
-			if len(zeros[x]) > 0 {
+			// fmt.Println(x)
+			if len(zeros[x]) > zeroI {
+				// fmt.Println(zeros[x], zeroI)
 				max = zeros[x][zeroI] - y
 				zeroI++
 			} else {
@@ -127,7 +141,8 @@ func findMaxBlock() {
 			if max <= p {
 				continue
 			}
-			findColMax2(x, y, max)
+			var colmax, newY = findColMax2(x, y, max)
+			max = min(colmax, max)
 			// for i = 0; i < max; i++ {
 			// if x+i == count-1 || y+i == len(row)-1 ||
 			// 	checkZero(x+i+1, y+i+1) ||
@@ -143,31 +158,71 @@ func findMaxBlock() {
 				}
 				flushPointMaxNumber(x, y, max)
 			}
-		}
-	}
-}
-
-// 找出竖向最大
-func findColMax2(x, y, max int) (int, int) {
-	for _, z := range zeros[x+1 : x+max-1] {
-		if len(z) > 0 {
-			for _, j := range z {
-				if j >= y {
-					if j-y > max {
-						return max, y + max
-					} else {
-						return j - y, j
-					}
-				}
+			if newY < count-1 {
+				x = newY
 			}
 		}
 	}
 }
 
+// 找出竖向最大 return max, 0y-index
+func findColMax2(x, y, max int) (int, int) {
+	// from next col to max col
+	// 1	 1 1 0max
+	// 0 1 1 <- done
+	// 1 0 1 <- done
+	// 1 1 0 <- done
+	// ..... <- no
+
+	// 1. in line < max
+	// 		1.  zero.y > y
+	//			zero.y - y > max return max
+	//			zero.y - y < max return zero.y - y
+	// 2. in line > max return max
+	var colmax = 1
+	var zeroy = y + max
+	for _, z := range zeros[x+1 : x+max-1] {
+		var done = false
+		if len(z) > 0 {
+			for _, j := range z {
+				// 当找到y后面的0
+				if j >= y {
+					// 如果在max位置之后
+					if j-y > max {
+						colmax = max
+						zeroy = y + max // 定位到该点max的0位置
+						// return max, y + max
+					} else {
+						// 最大的为 0点到y的距离
+						colmax = j - y
+						if j-y < max/2 {
+							// 如果0->y距离在max一半以内 定位到0点之后
+							zeroy = j
+						} else {
+							zeroy = y + max // 定位到0max后
+						}
+						// return j - y, j
+					}
+					done = true
+					break
+				}
+			}
+		} else {
+			colmax++
+		}
+		if done {
+			break
+		}
+	}
+	return colmax, zeroy
+}
+
 func flushPointMaxNumber(x, y, max int) {
 	for i := 0; i < max; i++ {
 		for j := 0; j < max; j++ {
-			canvas[x+i][y+j] = max
+			if max > canvas[x+i][y+j] {
+				canvas[x+i][y+j] = max
+			}
 		}
 	}
 }
@@ -195,7 +250,7 @@ func findZeroPoint() {
 		}
 		zeros = append(zeros, zero)
 	}
-	fmt.Println(zeroMap)
+	// fmt.Println(zeroMap)
 }
 
 func findColMax(x, y int, zeros [][]int, border int) int {
