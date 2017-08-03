@@ -32,14 +32,15 @@
                          width: 50,
                          sortable: true
                      },  */
-                    {
+                    /* {
                         field: 'Name',
                         title: '服务名',
                         width: 100,
                         sortable: true,
                         align: 'center',
                         editor: 'text'
-                    },{
+                    },  */
+                    {
                         field: 'Host',
                         title: '服务地址',
                         width: 100,
@@ -80,7 +81,7 @@
             onDblClickRow: function(index, row) {
                 editrow();
             },
-            onClickRow: function (index, row) {
+            onClickRow: function(index, row) {
                 // console.log(index, row)
             },
             onRowContextMenu: function(e, index, row) {
@@ -94,7 +95,7 @@
             }
         });
 
-       
+
         //创建添加服务器窗口
         $("#dialog").dialog({
             modal: true,
@@ -129,7 +130,7 @@
                 }
             }]
         });
-        
+
 
     })
 
@@ -180,11 +181,11 @@
     function addrow() {
         $("#dialog").dialog('open');
         $("#form1").form('clear');
-        $('#form1').form('load',{
+        $('#form1').form('load', {
             Port: 6379
         })
     }
- 
+
 
     //删除
     function delrow() {
@@ -207,16 +208,13 @@
             }
         });
     }
-
-   
-
 </script>
 
 <body>
     <table id="datagrid" toolbar="#tb"></table>
     <br/>
-    <table id="datagrid_run" ></table>
-   
+    <table id="datagrid_run"></table>
+
     <div id="tb" style="padding:5px;height:auto">
         <a href="#" icon='icon-add' plain="true" onclick="addrow()" class="easyui-linkbutton">新增</a>
         <a href="#" icon='icon-edit' plain="true" onclick="editrow()" class="easyui-linkbutton">编辑</a>
@@ -226,7 +224,7 @@
         <a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton">刷新</a>
     </div>
 
-   
+
 
     <!--表格内的右键菜单-->
     <div id="mm" class="easyui-menu" style="width:120px;display: none">
@@ -236,23 +234,23 @@
         <div iconCls='icon-reload' onclick="reloadrow()">刷新</div>
         <div class="menu-sep"></div>
     </div>
-    
- 
+
+
     <div id="dialog" title="添加Redis数据库" style="width:400px;height:400px;">
         <div style="padding:20px 20px 40px 80px;">
             <form id="form1" method="post">
                 <table>
-                    <tr>
+                    <!-- <tr>
                         <td>服务名：</td>
                         <td><input name="Name" class="easyui-validatebox" required="true" /></td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td>服务地址：</td>
-                        <td><input name="Host" class="easyui-validatebox" required="true"/></td>
+                        <td><input name="Host" class="easyui-validatebox" required="true" /></td>
                     </tr>
                     <tr>
                         <td>端口：</td>
-                        <td><input name="Port" class="easyui-validatebox" placeholder="6379" value="6379"/></td>
+                        <td><input name="Port" class="easyui-validatebox" placeholder="6379" value="6379" /></td>
                     </tr>
                     <tr>
                         <td>备注：</td>

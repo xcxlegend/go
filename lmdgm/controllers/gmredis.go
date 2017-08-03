@@ -51,6 +51,7 @@ func (this *GMRedisController) AddRedis() {
 	if s.Port == 0 {
 		s.Port = 6379
 	}
+	s.Name = s.Host
 	id, err := m.AddRedis(&s)
 	if err == nil && id > 0 {
 		this.DBLogTplData(models.LOGNODE_REDIS_ADD, DBLOGNODEREMARK_TPL_REDIS_ADD, &s)

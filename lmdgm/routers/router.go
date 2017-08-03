@@ -78,6 +78,11 @@ func init() {
 				&controllers.DownController{},
 			),
 		),
+		beego.NSNamespace("/log",
+			beego.NSInclude(
+				&controllers.InnerLogController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 

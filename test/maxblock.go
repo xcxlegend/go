@@ -57,7 +57,7 @@ func createRandCube(len int) {
 
 func main() {
 	// fmt.Println(2 ^ 3)
-	createRandCube(20)
+	createRandCube(10)
 	outshow(canvas)
 	var start = time.Now().UnixNano()
 	findZeroPoint()
@@ -129,42 +129,55 @@ func main() {
 
 func findMaxBlock() {
 	var count = len(canvas)
+	// 全局最大
 	var blockMax = 1
-	// 开始从0,0开始循环
+	// 开始从0,0开始循环 一直到倒数第二行...最后一行不算
 	for x := 0; x < count-1; x++ {
 		// 如果最大的已经超过离底线的距离 则不继续计算
-		if blockMax > count-x {
-			// break
-		}
+		// 弃掉
+		// if blockMax > count-x {
+		// break
+		// }
 		var row = canvas[x]
+		// 当前行的0点的指针
 		var zeroI = 0
-		// 循环一行
-		for y := 0; y < len(row)-1; y++ {
+		var rowcount = len(row)
+		// 循环一行 知道倒数第二列.. 最后一列不算
+		for y := 0; y < rowcount-1; y++ {
 			var p = row[y]
+			// 如果当前点是0点 则跳过 并且指针+1
 			if p == 0 {
+				zeroI++
 				continue
 			}
+			// 申明该点的最大块
 			var max int
 			// fmt.Println(x)
+			// 如果y后面有0点
 			if len(zeros[x]) > zeroI {
 				// fmt.Println(zeros[x], zeroI)
+				// 则最大块是0点到y的距离
 				max = zeros[x][zeroI] - y
 				// zeroI++
 				// if x == 14 {
 				// 	fmt.Println("0: ", x, y, zeros[x], zeroI, max)
 				// }
 			} else {
-				max = len(row) - y
+				// 否则是行底到y的距离
+				max = rowcount - y
 				// if x == 14 {
 				// 	// fmt.Println("end: ", x, y, max)
 				// }
 			}
 
+			// 如果最大块超过了到底线的距离m 那么置为m
 			if max > count-x {
 				max = count - x
 			}
+			fmt.Println("1:", x, y, max)
 
-			if max <= p {
+			// 如果最大块可能大于当前点的数值  表示可以生成新的大块
+			if max > p {
 				/* if len(zeros[x]) > zeroI {
 					y = zeros[x][zeroI]
 				}  */ /* else if y+max < len(row) {
@@ -172,8 +185,10 @@ func findMaxBlock() {
 				} else {
 					break
 				} */
-			} else {
-				var colmax, newY = findColMax2(x, y, max)
+				// } else {
+				//
+				// 获取列向最大块可能和当前行的下一个点 跳点
+				var colmax, y = findColMax2(x, y, max)
 				// newY--
 				// fmt.Println(x, y, colmax, max, newY)
 				max = min(colmax, max)
@@ -190,15 +205,16 @@ func findMaxBlock() {
 					if max > blockMax {
 						blockMax = max
 					}
+					fmt.Println("f:", x, y, max)
 					flushPointMaxNumber(x, y, max)
 				}
-				if newY < count-1 {
-					y = newY
-				}
+				// if newY < count-1 {
+				// 	y = newY
+				// }
 			}
-			if len(zeros[x]) > zeroI && zeros[x][zeroI] == y {
-				zeroI++
-			}
+			// if len(zeros[x]) > zeroI && zeros[x][zeroI] == y {
+			// 	zeroI++
+			// }
 		}
 	}
 }
@@ -217,40 +233,69 @@ func findColMax2(x, y, max int) (int, int) {
 	//			zero.y - y > max return max
 	//			zero.y - y < max return zero.y - y
 	// 2. in line > max return max
+
+	// 初始化为最大块可能为max
 	var colmax = 1
+	// 初始化跳点为0点或者行底
 	var zeroy = y + max
-	for _, z := range zeros[x+1 : x+max] {
+	var i = 1
+	// 从当前行+1一直到 max行 查找0点
+	for _, z := range zeros[x+1 : x+max-1] {
 		var done = false
 		if len(z) > 0 {
 			for _, j := range z {
-				// 当找到y后面的0
+				// 查找y后的0点
+				// 如果处于对角后位 则不用继续下去了
+				// 如果处于对角前位 则--
+				// if j >= y {
 				if j >= y {
-					// 如果在max位置之后
-					if j-y > max {
-						colmax = max
-						zeroy = y + max // 定位到该点max的0位置
+					if 
+					if j-y < max/2 {
+						zeroy = j + 1
+					}
+
+					break
+				}
+				// }
+				/* if j == y {
+					done = true
+					break
+				}
+				// 当找到y后面的0
+				if j > y {
+					fmt.Println("0:", y, j, max)
+					// 如果在colmax位置之后
+					if j-y < colmax {
+						// colmax = max
+						// zeroy = y + max // 定位到该点max的0位置
 						// return max, y + max
-					} else {
+						// } else {
 						// 最大的为 0点到y的距离
-						colmax = j - y
-						if j-y < max/2 {
+						if colmax < j-y {
+							colmax = j - y
+						}
+						if colmax < max/2 {
 							// 如果0->y距离在max一半以内 定位到0点之后
 							zeroy = j
 						} else {
 							zeroy = y + max // 定位到0max后
 						}
 						// return j - y, j
+						done = true
 					}
-					done = true
 					break
-				}
+				} */
 			}
+		} else {
+			colmax++
 		}
+		i++
 		if done {
 			break
 		}
-		colmax++
+		// colmax++
 	}
+	fmt.Println("c:", x, y, max, colmax, zeroy)
 	return colmax, zeroy
 }
 

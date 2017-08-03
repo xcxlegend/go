@@ -46,7 +46,7 @@
                         width: 100,
                         align: 'center',
                         editor: 'text'
-                    },{
+                    }, {
                         field: 'Host',
                         title: '服务器内网传输地址',
                         width: 100,
@@ -74,7 +74,7 @@
                             value = "******"
                             return "******"
                         }
-                    },{
+                    }, {
                         field: 'IsMount',
                         title: '是否挂载',
                         width: 100,
@@ -108,73 +108,77 @@
             onDblClickRow: function(index, row) {
                 editrow();
             },
-            onClickRow: function (index, row) {
+            onClickRow: function(index, row) {
                 // console.log(index, row)
                 $("#datagrid_run").datagrid({
                     title: '运行情况',
                     idField: "pid",
-                    url: URL + '/ajax_get_stat?id='+row.Id,
+                    url: URL + '/ajax_get_stat?id=' + row.Id,
                     method: 'POST',
                     pagination: false,
                     toolbar: null,
                     singleSelect: true,
                     toolbar: "#tb2",
-                    rowStyler: function(index,row){
-                        if (!row.is_run){
+                    rowStyler: function(index, row) {
+                        if (!row.is_run) {
                             return 'color:#b74949;font-weight:bold;';
                         }
                     },
-                    columns: [[
-                        {
+                    columns: [
+                        [{
                             field: 'server_id',
                             title: '服务器ID',
                             width: 200,
                             align: 'center',
-                        },{
+                        }, {
                             field: 'pid',
                             title: 'PID',
                             width: 200,
                             align: 'center',
-                        },{
+                        }, {
                             field: 'confile',
                             title: '配置文件',
                             width: 200,
                             align: 'center',
-                        }
-                        ,{
+                        }, {
                             field: 'stime',
                             title: '开始时间',
                             width: 200,
                             align: 'center',
-                        },{
+                        }, {
+                            field: 'ltime',
+                            title: '最近心跳时间',
+                            width: 200,
+                            align: 'center',
+                        }, {
                             field: 'is_run',
                             title: 'RUN',
                             width: 200,
                             align: 'center'
-                        }
-                        ]],
-                            onRowContextMenu: function(e, index, row) {
-                                e.preventDefault();
-                                $(this).datagrid("selectRow", index);
-                                $('#mm_run').menu('show', {
-                                    left: e.clientX,
-                                    top: e.clientY
-                                });
-                            },
+                        }]
+                    ],
+                    onRowContextMenu: function(e, index, row) {
+                        e.preventDefault();
+                        $(this).datagrid("selectRow", index);
+                        $('#mm_run').menu('show', {
+                            left: e.clientX,
+                            top: e.clientY
+                        });
+                    },
                 });
                 // $.post(URL+'/ajax_get_stat', {id: row.Id}, function(res){
-                    // console.log(res)
-                    // console.log(res.data)
-                    // $("#datagrid_run").datagrid("loadData", {"total": 2, "rows":[{
-                    //       "comd": "./union",
-                    //       "confile": "conf/test.json",
-                    //       "pid": "24128"
-                    //     }, {
-                    //       "comd": "./union",
-                    //       "confile": "conf/pvp.json",
-                    //       "pid": "24140"
-                    //     }]}
-                    //     )
+                // console.log(res)
+                // console.log(res.data)
+                // $("#datagrid_run").datagrid("loadData", {"total": 2, "rows":[{
+                //       "comd": "./union",
+                //       "confile": "conf/test.json",
+                //       "pid": "24128"
+                //     }, {
+                //       "comd": "./union",
+                //       "confile": "conf/pvp.json",
+                //       "pid": "24140"
+                //     }]}
+                //     )
                 // })
             },
             onRowContextMenu: function(e, index, row) {
@@ -188,7 +192,7 @@
             }
         });
 
-       
+
         //创建添加服务器窗口
         $("#dialog").dialog({
             modal: true,
@@ -344,14 +348,18 @@
     }
 
 
-    function closeApp(){
+    function closeApp() {
         // console.log("close app");
         var row = $("#datagrid_run").datagrid("getSelected");
         if (!row) {
             vac.alert("请选择要操作的行");
             return;
         }
-        $.post(URL + '/ssh/close', {id: row.server_id, pid: row.pid, confile: row.confile }, function(res){
+        $.post(URL + '/ssh/close', {
+            id: row.server_id,
+            pid: row.pid,
+            confile: row.confile
+        }, function(res) {
             $("#datagrid_run").datagrid("reload")
         })
     }
@@ -368,85 +376,93 @@
     //     })
     // }
 
-    function startApp(){
+    function startApp() {
         // console.log("close app");
         var row = $("#datagrid_run").datagrid("getSelected");
         if (!row) {
             vac.alert("请选择要操作的行");
             return;
         }
-        $.post(URL + '/ssh/start', {id: row.server_id, confile: row.confile}, function(res){
+        $.post(URL + '/ssh/start', {
+            id: row.server_id,
+            confile: row.confile
+        }, function(res) {
             $("#datagrid_run").datagrid("reload")
         })
     }
 
-    function mount(){
+    function mount() {
         var row = $("#datagrid").datagrid("getSelected");
         if (!row) {
             vac.alert("请选择要操作的行");
             return;
         }
-        if (!confirm("确定要挂载")){
+        if (!confirm("确定要挂载")) {
             return
         }
-        $.post(URL + '/ssh/mount', {id: row.Id}, function(res){
+        $.post(URL + '/ssh/mount', {
+            id: row.Id
+        }, function(res) {
             $("#datagrid").datagrid("reload")
         })
     }
 
 
-    function editconf(){
-        var row =  $("#datagrid_run").datagrid("getSelected");
+    function editconf() {
+        var row = $("#datagrid_run").datagrid("getSelected");
         if (!row) {
             vac.alert("请选择要操作的行");
             return;
         }
-        $('#msgwindow').dialog({  
-            href: URL+'/conf_content?id='+row.server_id+'&file='+row.confile,
-            width: 600,  
-            height: 300,  
-            modal: true,  
+        $('#msgwindow').dialog({
+            href: URL + '/conf_content?id=' + row.server_id + '&file=' + row.confile,
+            width: 600,
+            height: 300,
+            modal: true,
             cache: false,
-            title: row.path,  
+            title: row.path,
             closable: true,
-            onLoad: function(){
+            onLoad: function() {
                 var contentnode = $('#msgwindow').find('.panel').children('.dialog-content')
-                contentnode.html('<textarea id="fcontent" style="width: 90%; height:90%">'+contentnode.html()+"</textarea>")
+                contentnode.html('<textarea id="fcontent" style="width: 90%; height:90%">' + contentnode.html() + "</textarea>")
             },
             buttons: [{
-                    text:'Ok',
-                    iconCls:'icon-ok',
-                    handler:function(){
-                        $.post(URL+'/update_conf', {id: row.server_id, file: row.confile, content: $('#fcontent').val()}, function(res){
-                            vac.alert("保存成功")
-                            $('#msgwindow').dialog('close')
-                        });
-                        // console.log(row.server_id, $('#fcontent').html());
-                    }
-                }]
-        });  
+                text: 'Ok',
+                iconCls: 'icon-ok',
+                handler: function() {
+                    $.post(URL + '/update_conf', {
+                        id: row.server_id,
+                        file: row.confile,
+                        content: $('#fcontent').val()
+                    }, function(res) {
+                        vac.alert("保存成功")
+                        $('#msgwindow').dialog('close')
+                    });
+                    // console.log(row.server_id, $('#fcontent').html());
+                }
+            }]
+        });
     }
 
 
-    function terminal(){
-         var row =  $("#datagrid").datagrid("getSelected");
+    function terminal() {
+        var row = $("#datagrid").datagrid("getSelected");
         if (!row) {
             vac.alert("请选择要操作的行");
             return;
         }
-        $('#terminal').html('<iframe src="/rbac/servers/terminal?id='+row.Id+'" width="99%" height="99%" frameborder="0" scrolling="no"></iframe>');
+        $('#terminal').html('<iframe src="/rbac/servers/terminal?id=' + row.Id + '" width="99%" height="99%" frameborder="0" scrolling="no"></iframe>');
         $('#terminal').window('open');
     }
-
 </script>
 
 <body>
     <table id="datagrid" toolbar="#tb"></table>
     <br/>
-    <table id="datagrid_run" ></table>
+    <table id="datagrid_run"></table>
     <div id="terminal" class="easyui-window" title="控制台" data-options="modal:true,closed:true" style="width:700px;height:400px;"></div>
     <!-- <div class="easyui-panel" title="Nested Panel" style="width:100%;height:auto;padding:10px;"> -->
-        <!-- <div class="easyui-layout"   data-options="fit:true">
+    <!-- <div class="easyui-layout"   data-options="fit:true">
             <div data-options="region:'center'" style="; padding:10px">
 
             </div>
@@ -506,7 +522,7 @@
                     </tr>
                     <tr>
                         <td>服务器内网地址：</td>
-                        <td><input name="Host" class="easyui-validatebox"/></td>
+                        <td><input name="Host" class="easyui-validatebox" /></td>
                     </tr>
                     <tr>
                         <td>SSH端口：</td>
