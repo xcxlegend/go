@@ -48,6 +48,12 @@ func init() {
 	beego.Router("/rbac/redis/del", &controllers.GMRedisController{}, "*:DelRedis")
 	beego.Router("/rbac/redis/index", &controllers.GMRedisController{}, "*:Index")
 
+	// 区服管理
+	beego.Router("/rbac/area/add", &controllers.AreaController{}, "*:AddArea")
+	beego.Router("/rbac/area/update", &controllers.AreaController{}, "*:UpdateArea")
+	// beego.Router("/rbac/area/del", &controllers.AreaController{}, "*:DelArea")
+	beego.Router("/rbac/area/index", &controllers.AreaController{}, "*:Index")
+
 	// 配置管理
 	beego.Router("/rbac/config/add", &controllers.GMConfigController{}, "*:AddConfig")
 	beego.Router("/rbac/config/update", &controllers.GMConfigController{}, "*:UpdateConfig")

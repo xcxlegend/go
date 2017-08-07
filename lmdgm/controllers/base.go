@@ -51,6 +51,10 @@ const (
 	%s`
 	DBLOGNODEREMARK_TPL_CONFIG_DEL = `删除了CONFIG: 
 	%s`
+	DBLOGNODEREMARK_TPL_AREA_ADD = `添加了区服: 
+	%s`
+	DBLOGNODEREMARK_TPL_AREA_UPDATE = `更新了区服: 
+	%s`
 )
 
 type BaseController struct {

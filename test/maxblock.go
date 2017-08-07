@@ -188,7 +188,7 @@ func findMaxBlock() {
 				// } else {
 				//
 				// 获取列向最大块可能和当前行的下一个点 跳点
-				var colmax, y = findColMax2(x, y, max)
+				var colmax, newY = findColMax2(x, y, max)
 				// newY--
 				// fmt.Println(x, y, colmax, max, newY)
 				max = min(colmax, max)
@@ -208,9 +208,9 @@ func findMaxBlock() {
 					fmt.Println("f:", x, y, max)
 					flushPointMaxNumber(x, y, max)
 				}
-				// if newY < count-1 {
-				// 	y = newY
-				// }
+				if newY < count-1 {
+					y = newY
+				}
 			}
 			// if len(zeros[x]) > zeroI && zeros[x][zeroI] == y {
 			// 	zeroI++
@@ -234,7 +234,7 @@ func findColMax2(x, y, max int) (int, int) {
 	//			zero.y - y < max return zero.y - y
 	// 2. in line > max return max
 
-	// 初始化为最大块可能为max
+	/* // 初始化为最大块可能为max
 	var colmax = 1
 	// 初始化跳点为0点或者行底
 	var zeroy = y + max
@@ -249,7 +249,7 @@ func findColMax2(x, y, max int) (int, int) {
 				// 如果处于对角前位 则--
 				// if j >= y {
 				if j >= y {
-					if 
+					if
 					if j-y < max/2 {
 						zeroy = j + 1
 					}
@@ -257,7 +257,7 @@ func findColMax2(x, y, max int) (int, int) {
 					break
 				}
 				// }
-				/* if j == y {
+				///* if j == y {
 					done = true
 					break
 				}
@@ -284,7 +284,7 @@ func findColMax2(x, y, max int) (int, int) {
 						done = true
 					}
 					break
-				} */
+				} /////
 			}
 		} else {
 			colmax++
@@ -294,8 +294,48 @@ func findColMax2(x, y, max int) (int, int) {
 			break
 		}
 		// colmax++
+	}*/
+
+	var colmax = 1
+	var i = 1
+	var zeroy = y + max
+	var omax = max
+	for _, z := range zeros[x+1 : x+max-1] {
+		if colmax >= omax {
+			break
+		}
+		if x+i >= len(canvas) {
+			break
+		}
+		if canvas[x+i][y+i] == 0 || canvas[x][y+i] == 0 {
+			break
+		}
+		if len(z) > 0 {
+			var done = false
+			for _, index := range z {
+				// 有在y后的0
+				if index >= y {
+
+					// 如果index距离y在新的max以内
+					if index-y < omax {
+						omax = index - y
+					}
+					break
+				}
+			}
+			if done {
+				break
+			}
+		} else {
+			colmax++
+		}
+		i++
 	}
-	fmt.Println("c:", x, y, max, colmax, zeroy)
+	if colmax < max/2 {
+		zeroy = y + colmax
+	}
+
+	// fmt.Println("c:", x, y, max, colmax, zeroy)
 	return colmax, zeroy
 }
 
