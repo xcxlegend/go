@@ -16,6 +16,7 @@ func (this *GMConfigController) Index() {
 	page_size, _ := this.GetInt64("rows")
 	sort := this.GetString("sort")
 	order := this.GetString("order")
+
 	if len(order) > 0 {
 		if order == "desc" {
 			sort = "-" + sort

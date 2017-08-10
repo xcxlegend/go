@@ -76,6 +76,12 @@ func init() {
 
 	// beego.Router("/rbac/sync/local", &controllers.SyncController{}, "*:Local")
 
+	// =========== GM =========
+	beego.Router("/gm/gamer/index", &controllers.GamerController{}, "*:Index")
+	beego.Router("/gm/gamer/search", &controllers.GamerController{}, "*:Search")
+
+	beego.Router("/gm/mail/send_to_gamer", &controllers.GMMailController{}, "*:SendToGamer")
+
 	// 外部接口 下载文件 ?file=
 	// beego.Router("/public/download", &controllers.DownController{}, "*:Index")
 	ns := beego.NewNamespace("/public/v1",

@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
-	_ "github.com/xcxlegend/go/lmdgm/models"
+	"github.com/xcxlegend/go/lmdgm/models"
 	_ "github.com/xcxlegend/go/lmdgm/routers"
 	_ "github.com/xcxlegend/go/lmdgm/servers"
 )
 
-const VERSION = "1.1.3"
+const VERSION = "1.2.0"
 
 func main() {
 	// if beego.BConfig.RunMode == "dev"  {
@@ -15,5 +16,14 @@ func main() {
 	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	// }
 
+	test()
+	models.AddDocConfig()
+	models.SetConfigData(3, 4, "doc/")
+	models.SetFunc()
 	beego.Run()
+
+}
+
+func test() {
+	fmt.Println("go a test")
 }

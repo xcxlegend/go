@@ -57,77 +57,51 @@ func createRandCube(len int) {
 
 func main() {
 	// fmt.Println(2 ^ 3)
-	createRandCube(10)
+	createRandCube(20)
 	outshow(canvas)
 	var start = time.Now().UnixNano()
 	findZeroPoint()
 	// fmt.Println(zeros)
-	findMaxBlock()
+	findMaxBlock2()
 	fmt.Println((time.Now().UnixNano() - start) / 1e3)
 	outshow(canvas)
-	/* var row = len(canvas)
-	fmt.Println(row)
-	outshow(canvas)
-	var zeros = [][]int{} // x, y
-	var KeyPoint = map[*Point]bool{}
-	var start = time.Now().UnixNano()
-	// 找出所有的零点
-	for x, l := range canvas {
-		var first = &Point{x, 0}
-		KeyPoint[first] = true
-		var zeroline = []int{}
-		for y, p := range l {
-			if p == 0 {
-				zeroline = append(zeroline, y)
-			}
-		}
-		zeros = append(zeros, zeroline)
-	}
-	fmt.Println("")
-	// fmt.Println(zeros)
-	// 开始找最大块
-	for x := 0; x < len(canvas); x++ {
-		var l = canvas[x]
-		for y, p := range l {
-			// fmt.Println(x, y, p)
+}
 
+func findMaxBlock2() {
+
+	var count = len(canvas)
+	for x, row := range canvas[:count-1] {
+		var rcount = len(row)
+		for y, p := range row[:rcount-1] {
 			if p == 0 {
-				zeros[x] = zeros[x][1:]
-				// fmt.Println(x, y, zeros[x])
 				continue
 			}
-			var max_in_row int
-			// fmt.Println(zeros[x])
-			if len(zeros[x]) > 0 {
-				max_in_row = zeros[x][0] - y
-			}
-			if max_in_row <= 0 {
-				max_in_row = len(l) - y
-			}
-			var max_in_col int = findColMax(x, y, zeros, row)
+			//var pmax = findRowMax(x, y)
+			var max = findPmax(x, y)
 
-			// for k, l := range zeros[x+1:] {
-			// 	if len(l) > 0 {
-			// 		max_in_col = k - x
-			// 	} else {
-			// 		max_in_col = len(canvas) - x
-			// 	}
-			// }
-			// fmt.Println(x, y, max_in_row, max_in_col)
-			var min = min(max_in_row, max_in_col)
-			// fmt.Println(x, y, zeros[x], max_in_row, max_in_col, min)
-			if min > 1 {
-				addOne(canvas, x, y, min)
-			}
-			// outshow(canvas)
+			flushPointMaxNumber(x, y, max)
 		}
 	}
 
-	fmt.Println((time.Now().UnixNano() - start) / 1e3)
-	outshow(canvas) */
+}
+
+func findPmax(x, y int) int {
+	var rmax = findRowMax(x, y)
+
+	var row = 1
+	for row < rmax && x < len(canvas)-1 {
+		x++
+		var nextmax = max(row, findRowMax(x, y))
+		if nextmax < rmax {
+			rmax = nextmax
+		}
+		row++
+	}
+	return min(row, rmax)
 }
 
 func findMaxBlock() {
+
 	var count = len(canvas)
 	// 全局最大
 	var blockMax = 1
@@ -140,40 +114,40 @@ func findMaxBlock() {
 		// }
 		var row = canvas[x]
 		// 当前行的0点的指针
-		var zeroI = 0
+		//		var zeroI = 0
 		var rowcount = len(row)
 		// 循环一行 知道倒数第二列.. 最后一列不算
 		for y := 0; y < rowcount-1; y++ {
 			var p = row[y]
-			// 如果当前点是0点 则跳过 并且指针+1
+			// 如果当前点是0点 则跳过
 			if p == 0 {
-				zeroI++
 				continue
 			}
-			// 申明该点的最大块
-			var max int
-			// fmt.Println(x)
-			// 如果y后面有0点
-			if len(zeros[x]) > zeroI {
-				// fmt.Println(zeros[x], zeroI)
-				// 则最大块是0点到y的距离
-				max = zeros[x][zeroI] - y
-				// zeroI++
-				// if x == 14 {
-				// 	fmt.Println("0: ", x, y, zeros[x], zeroI, max)
-				// }
-			} else {
-				// 否则是行底到y的距离
-				max = rowcount - y
-				// if x == 14 {
-				// 	// fmt.Println("end: ", x, y, max)
-				// }
-			}
+			// 声明该点的最大块
+			//			var max int
+			//			// fmt.Println(x)
+			//			// 如果y后面有0点
+			//			if len(zeros[x]) > zeroI {
+			//				// fmt.Println(zeros[x], zeroI)
+			//				// 则最大块是0点到y的距离
+			//				max = zeros[x][zeroI] - y
+			//				// zeroI++
+			//				// if x == 14 {
+			//				// 	fmt.Println("0: ", x, y, zeros[x], zeroI, max)
+			//				// }
+			//			} else {
+			//				// 否则是行底到y的距离
+			//				max = rowcount - y
+			//				// if x == 14 {
+			//				// 	// fmt.Println("end: ", x, y, max)
+			//				// }
+			//			}
 
-			// 如果最大块超过了到底线的距离m 那么置为m
-			if max > count-x {
-				max = count - x
-			}
+			//			// 如果最大块超过了到底线的距离m 那么置为m
+			//			if max > count-x {
+			//				max = count - x
+			//			}
+			var max = findRowMax(x, y)
 			fmt.Println("1:", x, y, max)
 
 			// 如果最大块可能大于当前点的数值  表示可以生成新的大块
@@ -188,10 +162,10 @@ func findMaxBlock() {
 				// } else {
 				//
 				// 获取列向最大块可能和当前行的下一个点 跳点
-				var colmax, newY = findColMax2(x, y, max)
+				max = findColMax3(x, y, max)
 				// newY--
 				// fmt.Println(x, y, colmax, max, newY)
-				max = min(colmax, max)
+				//				max = min(colmax, max)
 				// for i = 0; i < max; i++ {
 				// if x+i == count-1 || y+i == len(row)-1 ||
 				// 	checkZero(x+i+1, y+i+1) ||
@@ -205,18 +179,93 @@ func findMaxBlock() {
 					if max > blockMax {
 						blockMax = max
 					}
-					fmt.Println("f:", x, y, max)
+					//					fmt.Println("f:", x, y, max)
 					flushPointMaxNumber(x, y, max)
+					// y = y + max
 				}
-				if newY < count-1 {
-					y = newY
-				}
+
 			}
 			// if len(zeros[x]) > zeroI && zeros[x][zeroI] == y {
 			// 	zeroI++
 			// }
 		}
 	}
+}
+
+func findColMax3(x, y, max int) int {
+	var (
+		count  = len(canvas)
+		colmax = 1
+	)
+	for i := 1; i < max; i++ {
+		var (
+			newX = x + i
+			newY = y + i
+		)
+		if newX >= count {
+			break
+		}
+		var z = zeros[newX]
+		if canvas[newX][newY] == 0 {
+			break
+		}
+
+		if len(z) > 0 {
+			var done bool
+			for _, p := range z {
+
+				if p >= y {
+
+					if p < newX {
+						done = true
+					} else if p-y < max {
+						max = p - y
+					}
+
+					break
+				}
+
+			}
+			if done {
+				break
+			}
+
+		}
+
+		colmax++
+	}
+	return min(colmax, max)
+}
+
+// 找出横向最大  return max
+func findRowMax(x, y int) int {
+	if canvas[x][y] == 0 {
+		return 0
+	}
+	var (
+		z = zeros[x]
+		t = canvas[x]
+		//count = len(canvas)
+		max int
+	)
+	if len(z) > 0 {
+
+		for _, p := range z {
+			// 如果该行有0 并且在y后面有 找到第一个
+			if p > y {
+				max = p - y
+				break
+			}
+		}
+	}
+	// 如果没有0或者没找到y后面的 按照底边距离
+	if max == 0 {
+		max = len(t) - y
+	}
+	//if max > count-x {
+	//	max = count - x
+	//}
+	return max
 }
 
 // 找出竖向最大 return max, 0y-index
@@ -407,6 +456,14 @@ func outshow(vec [][]int) {
 
 func min(x, y int) int {
 	if y < x {
+		return y
+	} else {
+		return x
+	}
+}
+
+func max(x, y int) int {
+	if y > x {
 		return y
 	} else {
 		return x

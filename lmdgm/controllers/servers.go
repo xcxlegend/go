@@ -37,6 +37,7 @@ type ServerInfo struct {
 	ServerType       *string `protobuf:"bytes,8,opt,name=serverType" json:"serverType,omitempty"`
 	Load             *int32  `protobuf:"varint,9,opt,name=load" json:"load,omitempty"`
 	Conf             *string `protobuf:"bytes,10,opt,name=conf" json:"conf,omitempty"`
+	OnlineCount      *int32  `protobuf:"varint,11,opt,name=onlineCount" json:"onlineCount,omitempty"`
 	XXX_unrecognized []byte  `json:"-"`
 }
 
@@ -47,12 +48,13 @@ type ServersController struct {
 
 //AppStatResponse 应用配置运行状态
 type AppStatResponse struct {
-	PID      string `json:"pid"`
-	ServerId int64  `json:"server_id"`
-	Stime    string `json:"stime"`
-	Conf     string `json:"confile"`
-	IsRun    bool   `json:"is_run"`
-	Ltime    string `json:"ltime"`
+	PID         string `json:"pid"`
+	ServerId    int64  `json:"server_id"`
+	Stime       string `json:"stime"`
+	Conf        string `json:"confile"`
+	IsRun       bool   `json:"is_run"`
+	Ltime       string `json:"ltime"`
+	OnlineCount int32  `json:"onlineCount"`
 }
 
 type AppStatResponseList []*AppStatResponse
@@ -300,6 +302,7 @@ func (this *ServersController) GetStat() {
 			// beego.Error("msg:", s, err, *(s.LastTick), *(s.Conf), c)
 			if run, ok := runcommands[c]; ok {
 				run.Ltime = fmt.Sprintf("%v", time.Unix(*(s.LastTick), 0).Format("2006-01-02 15:04:05"))
+				run.OnlineCount = *s.OnlineCount
 			}
 		}
 	}

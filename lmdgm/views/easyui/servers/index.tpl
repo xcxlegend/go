@@ -151,6 +151,11 @@
                             width: 200,
                             align: 'center',
                         }, {
+                            field: 'onlineCount',
+                            title: '在线人数',
+                            width: 200,
+                            align: 'center',
+                        }, {
                             field: 'is_run',
                             title: 'RUN',
                             width: 200,
@@ -454,6 +459,21 @@
         $('#terminal').html('<iframe src="/rbac/servers/terminal?id=' + row.Id + '" width="99%" height="99%" frameborder="0" scrolling="no"></iframe>');
         $('#terminal').window('open');
     }
+
+    var autoRrefreshTimer
+
+    function autorefresh(){
+        alert('开始自动刷新')
+        autoRrefreshTimer= setInterval(function(){
+            $('#datagrid_run').datagrid('reload');
+        }, 3000)
+    }
+
+    function closeauto(){
+        alert('自动刷新关闭')
+        clearInterval(autoRrefreshTimer)
+    }
+
 </script>
 
 <body>
@@ -486,6 +506,8 @@
         <a href="#" icon='icon-add' plain="true" onclick="startApp()" class="easyui-linkbutton">启动</a>
         <a href="#" icon='icon-cancel' plain="true" onclick="closeApp()" class="easyui-linkbutton">关闭</a>
         <a href="#" icon='icon-reload' plain="true" onclick="$('#datagrid_run').datagrid('reload')" class="easyui-linkbutton">刷新</a>
+        <a href="#" icon='icon-reload' plain="true" onclick="autorefresh()" class="easyui-linkbutton">自动刷新</a>
+        <a href="#" icon='icon-cancel' plain="true" onclick="closeauto()" class="easyui-linkbutton">关闭自动刷新</a>
         <a href="#" icon='icon-edit' plain="true" onclick="editconf()" class="easyui-linkbutton">编辑文件</a>
     </div>
 
