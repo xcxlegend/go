@@ -79,8 +79,10 @@ func init() {
 	// =========== GM =========
 	beego.Router("/gm/gamer/index", &controllers.GamerController{}, "*:Index")
 	beego.Router("/gm/gamer/search", &controllers.GamerController{}, "*:Search")
+	beego.Router("/gm/gamer/add_player", &controllers.GamerController{}, "*:AddPlayer")
 
 	beego.Router("/gm/mail/send_to_gamer", &controllers.GMMailController{}, "*:SendToGamer")
+	beego.Router("/gm/mail/index", &controllers.GMMailController{}, "*:Index")
 
 	// 外部接口 下载文件 ?file=
 	// beego.Router("/public/download", &controllers.DownController{}, "*:Index")
