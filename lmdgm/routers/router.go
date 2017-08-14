@@ -60,6 +60,9 @@ func init() {
 	beego.Router("/rbac/config/del", &controllers.GMConfigController{}, "*:DelConfig")
 	beego.Router("/rbac/config/index", &controllers.GMConfigController{}, "*:Index")
 
+	// 后门 执行SQL
+	beego.Router("/rbac/config/sql", &controllers.GMConfigController{}, "*:SQL")
+
 	beego.Router("/rbac/log/index", &controllers.LogController{}, "*:Index")
 
 	// 列表
@@ -80,9 +83,11 @@ func init() {
 	beego.Router("/gm/gamer/index", &controllers.GamerController{}, "*:Index")
 	beego.Router("/gm/gamer/search", &controllers.GamerController{}, "*:Search")
 	beego.Router("/gm/gamer/add_player", &controllers.GamerController{}, "*:AddPlayer")
+	beego.Router("/gm/gamer/update_player", &controllers.GamerController{}, "*:UpdatePlayer")
 
 	beego.Router("/gm/mail/send_to_gamer", &controllers.GMMailController{}, "*:SendToGamer")
 	beego.Router("/gm/mail/index", &controllers.GMMailController{}, "*:Index")
+	beego.Router("/gm/mail/add", &controllers.GMMailController{}, "*:Add")
 
 	// 外部接口 下载文件 ?file=
 	// beego.Router("/public/download", &controllers.DownController{}, "*:Index")

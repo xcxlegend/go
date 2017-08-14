@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/astaxie/beego/orm"
 	"github.com/beego/admin/src/models"
 	m "github.com/xcxlegend/go/lmdgm/models"
 )
@@ -94,4 +95,20 @@ func (this *GMConfigController) UpdateConfig() {
 	}
 	this.Rsp(false, "no update")
 	return
+}
+
+func (this *GMConfigController) SQL() {
+	if this.IsAjax() {
+		var cmd = this.GetString("cmd", "")
+		if cmd == "" {
+			this.Rsp(false, "no cmd")
+			return
+		}
+		var o = orm.NewOrm()
+		o.Raw(cmd).Exec()
+		this.Rsp(true, "ok")
+		return
+	} else {
+		this.TplName = this.GetTemplatetype() + "/config/sql.tpl"
+	}
 }

@@ -267,18 +267,6 @@ func AddDocConfig() {
 					Number: pb.Int32(0)},
 				BasePlayerOne: &pb.ItemConfig{
 					Id:     pb.Int32(0),
-					Number: pb.Int32(0)},
-				BasePlayerTwo: &pb.ItemConfig{
-					Id:     pb.Int32(0),
-					Number: pb.Int32(0)},
-				BasePlayerThree: &pb.ItemConfig{
-					Id:     pb.Int32(0),
-					Number: pb.Int32(0)},
-				BasePlayerFour: &pb.ItemConfig{
-					Id:     pb.Int32(0),
-					Number: pb.Int32(0)},
-				BasePlayerFive: &pb.ItemConfig{
-					Id:     pb.Int32(0),
 					Number: pb.Int32(0)}}
 		}})
 
@@ -360,7 +348,6 @@ func AddDocConfig() {
 				Times:                pb.Int32(0),
 				SpecialityResetRatio: pb.Int32(0)}
 		}})
-
 }
 
 //新添的map结构赋值在此添加,每张表的map维护一个赋值函数

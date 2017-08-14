@@ -1,0 +1,15 @@
+唯一标示,行为树
+int,string
+id,behavior_tree
+1,空ai,
+2,训练_传球,training_pass
+3,训练_盖帽,training_block
+4,训练_测试,training_test
+5,训练_lt测试,training_lttest
+6,训练_lt投篮,training_shoot_three
+7,测试_1v1,AI_1V1
+8,中锋,AI_ChiMu
+9,PG,AI_GongCheng
+10,SG,AI_SanJing
+11,SF,AI_LiuChuanFeng
+12,PF,AI_YingMu

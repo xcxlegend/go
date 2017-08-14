@@ -1,0 +1,9 @@
+pvp帧间隔,PvpDeltaTime,float,0.05
+pvp输入间隔,PvpInputDelta,float,0.05
+pvp多线程接收,PvpThreadRecv,bool,1
+pvp2,PvpMinFrameTime,int,1
+pvp,PvpMaxReSend,int,20
+pvp3,PvpMatchChoseTime,int,60
+pvp4,PvpMatchTime,int,300
+每日刷新时间,EverydayUpdateTime,int,6
+角色名是否可重复,RoleNameRepated,int,1

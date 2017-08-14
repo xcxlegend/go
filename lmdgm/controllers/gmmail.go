@@ -3,6 +3,8 @@ package controllers
 import (
 	"antnet"
 	//"fmt"
+	"encoding/json"
+	bm "github.com/beego/admin/src/models"
 	"github.com/xcxlegend/go/lib"
 	"github.com/xcxlegend/go/lmdgm/models"
 	"github.com/xcxlegend/go/lmdgm/pb"
@@ -102,6 +104,46 @@ func (this *GMMailController) SendToGamer() {
 	//fmt.Println(mail)
 
 	if models.RDSSendMailToGamer(gid, mail, nil) {
+		//this.DBLogTplData(bm.LOGNODE_GAMER_MAIL, DBLOGNODEREMARK_TPL_MAIL_SEND_TO_GAMER, mail)
+		var log, _ = json.MarshalIndent(mail, "", "	")
+		this.DBLogTpl(bm.LOGNODE_GAMER_MAIL, DBLOGNODEREMARK_TPL_MAIL_SEND_TO_GAMER, gid, log)
+		this.Rsp(true, "ok")
+	} else {
+		this.Rsp(false, "err")
+	}
+}
+
+// 添加系统邮件
+func (this *GMMailController) Add() {
+	var theme = strings.TrimSpace(this.GetString("theme", ""))
+	if theme == "" {
+		this.Rsp(false, "Theme不能为空")
+		return
+	}
+
+	var msg = strings.TrimSpace(this.GetString("msg", ""))
+	if msg == "" {
+		this.Rsp(false, "Msg不能为空")
+		return
+	}
+
+	var mail = new(pb.Mail)
+	if !this.parseAttach(mail) {
+		this.Rsp(false, "附件格式错误")
+		return
+	}
+
+	mail.Id = pb.Int64(lib.GetUUID(0))
+	mail.SenderId = pb.Int32(0)
+	mail.Msg = pb.String(msg)
+	mail.Theme = pb.String(theme)
+	mail.Time = pb.Int64(time.Now().Unix())
+	mail.State = pb.Int32(0)
+	mail.AttachmentState = pb.Int32(0)
+	if models.RDSSendSysMail(mail, nil) {
+		//this.DBLogTplData(bm.LOGNODE_GAMER_MAIL, DBLOGNODEREMARK_TPL_MAIL_SEND_TO_GAMER, mail)
+		//var log, _ = json.MarshalIndent(mail, "", "	")
+		//this.DBLogTpl(bm.LOGNODE_GAMER_MAIL, DBLOGNODEREMARK_TPL_MAIL_SEND_TO_GAMER, gid, log)
 		this.Rsp(true, "ok")
 	} else {
 		this.Rsp(false, "err")

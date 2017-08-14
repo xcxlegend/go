@@ -1,0 +1,4 @@
+ID,初始等级,初始球队经验,初始金币,初始钻石,初始选择球员表,初始选择球员表,初始选择球员表
+int,int,ItemConfig,ItemConfig,ItemConfig,ItemConfig,ItemConfig,ItemConfig
+id,base_lv_team,base_exp_team,base_gold,base_diamond,base_player_one,base_player_two,base_player_three
+1,1,10000001_0,10000002_1000000,10000003_1000110,99010410_1,99010504_1,99010107_1
