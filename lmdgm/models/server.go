@@ -21,6 +21,7 @@ type Server struct {
 	LoginUserName string    `orm:"size(32)" form:"LoginUserName"`
 	LoginPassword string    `orm:"size(32)" form:"LoginPassword"`
 	Remark        string    `orm:"null;size(200)" form:"Remark" valid:"MaxSize(200)"`
+	Status        int       `orm:"size(1)" form:"Status"`
 	IsMount       bool      `orm:"-"`
 }
 
@@ -113,6 +114,10 @@ func UpdateServer(s *Server) (int64, error) {
 
 	if len(s.LoginPassword) > 0 {
 		server["LoginPassword"] = s.LoginPassword
+	}
+
+	if s.Status != 0 {
+		server["Status"] = s.Status
 	}
 
 	// if u.Status != 0 {

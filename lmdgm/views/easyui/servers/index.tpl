@@ -2,13 +2,10 @@
 
 <script type="text/javascript">
     var editIndex = undefined;
-    var statuslist = [{
-        statusid: '1',
-        name: '禁用'
-    }, {
-        statusid: '2',
-        name: '启用'
-    }];
+    var statuslist = [
+        {statusid:'1',name:'禁用'},
+        {statusid:'2',name:'启用'}
+    ];
     var URL = "/rbac/servers";
     $(function() {
 
@@ -79,6 +76,26 @@
                         title: '是否挂载',
                         width: 100,
                         align: 'center',
+                    }, {
+                        field:'Status',
+                        title:'状态',
+                        width:50,
+                        align: 'center',
+                        formatter:function(value){
+                            for(var i=0; i<statuslist.length; i++){
+                                if (statuslist[i].statusid == value) return statuslist[i].name;
+                            }
+                            return value;
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'statusid',
+                                textField:'name',
+                                data:statuslist,
+                                required:true
+                            }
+                        }
                     }
                     /* , {
                                         field: 'Createtime',

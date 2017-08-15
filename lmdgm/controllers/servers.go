@@ -96,7 +96,9 @@ func (this *ServersController) Index() {
 	if this.IsAjax() {
 		servers, count := m.GetServerList(page, page_size, sort)
 		for _, s := range servers {
-			this.getServerMount(s)
+			if s.Status == 1 {
+				this.getServerMount(s)
+			}
 		}
 		this.Data["json"] = &map[string]interface{}{"total": count, "rows": &servers}
 
@@ -126,7 +128,7 @@ func (this *ServersController) AddServer() {
 		// 获取内网地址
 		this.getServerHost(&s)
 	}
-
+	s.Status = 2
 	id, err := m.AddServer(&s)
 	if err == nil && id > 0 {
 
@@ -182,6 +184,7 @@ func (this *ServersController) UpdateServer() {
 		this.getServerHost(&o)
 		s.Host = o.Host
 	}
+	//fmt.Println(s.Status)
 	id, err := m.UpdateServer(&s)
 	if err != nil {
 		this.Rsp(false, err.Error())

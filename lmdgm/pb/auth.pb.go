@@ -168,6 +168,7 @@ It has these top-level messages:
 	GamerReadMailC2S
 	GamerSetSignC2S
 	GamerSetIconC2S
+	GamerSetNameC2S
 	GamerGetPlayerSpecialityC2S
 	GamerGetPlayerSpecialityS2C
 	GamerUpdatePlayerSpecialityC2S

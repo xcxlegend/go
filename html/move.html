@@ -1,0 +1,263 @@
+<html>
+<head>
+    <script src="vue.js"></script>
+
+    <style>
+        #canvas{
+            position: relative;
+            border: 1px dashed #9575cd;
+        }
+        .obj {
+            position: absolute;
+
+            width: 9px;
+            height: 9px;
+        }
+        .obj.c1 {
+            border: 1px solid #ff3c2f;
+        }
+        .obj.c3{
+            border: 1px solid #0015ff;
+            background: #0015ff;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas" v-bind:style="{width: canvas.width + 'px', height: canvas.height + 'px', 'margin-left': canvas.startX + 'px', 'margin-top': canvas.startY + 'px'}">
+        <obj-block v-for="o in objs" :key="o.id" v-bind:o="o" v-if="o.valid"></obj-block>
+    </div>
+</body>
+<script>
+
+    var Arrayremove = function(array, val) {
+        var index = array.indexOf(val);
+        if (index > -1) {
+            array.splice(index, 1);
+        }
+    };
+
+    function rand(n, m) {
+        return parseInt(Math.random()*(m-n)+n, 10)
+    }
+
+
+    Vue.component('obj-block', {
+        props: ['o'],
+        template: '<div class="obj" v-bind:class="\'c\'+o.class" v-bind:style="{top: o.vec.y + \'px\', left: o.vec.x + \'px\'}"></div>'
+    })
+
+    const TOWARD = {
+        TOP:  1,
+        RIGHT:2,
+        DOWN: 3,
+        LEFT: 4
+    }
+
+    const OBJCLASS = {
+        NONE: 0,
+        GAMER: 1,
+        MONSTER: 3,
+        PLAYER: 5,
+        BULLET:7,
+    }
+
+    var app = new Vue({
+        el: '#canvas',
+        data: {
+            canvas: {
+                startX: 20,
+                startY: 20,
+                width:  800,
+                height: 800,
+                block: 10,
+            },
+            objs: [],
+            objsMap: {},
+            monsters: [],
+            maxMonsterNum: 10,
+            monsterIndex:1,
+            gamer: {},
+            ticker: null,
+            run: function () {
+                for (var index in app.objs){
+                    var obj = app.objs[index]
+                    console.log(index, obj)
+                    if (obj.run != undefined)
+                    {
+                        obj.run()
+                    }
+                }
+                // 每秒刷新
+                setInterval(function () {
+                    if (app.monsters.length < app.maxMonsterNum){
+                        app.addRandMonster()
+                    }
+                }, 1000)
+            },
+            checkVec: function (x, y) {
+                for (var id in app.objs){
+                    var obj = app.objs[id]
+                    if (obj.vec.x == x && obj.vec.y == y){
+                        return false
+                    }
+                }
+                return true
+            },
+            handleCrash: function (objA, objB) {
+                // 如果是玩家和怪碰撞
+                if (objA.class * objB.class == OBJCLASS.GAMER * OBJCLASS.MONSTER)
+                {
+                    var gamer, monster;
+                    if (objA.class == OBJCLASS.GAMER){
+                        gamer = objA
+                        monster = objB
+                    }else{
+                        gamer = objB
+                        monster = objA
+                    }
+                    gamer.kill ++
+                    monster.destroy()
+                }
+            },
+            addRandMonster: function () {
+                var x = rand(0, app.canvas.width/app.canvas.block)*app.canvas.block
+                var y = rand(0, app.canvas.width/app.canvas.block)*app.canvas.block
+                while (!app.checkVec(x, y)){
+                    x = rand(0, app.canvas.width/app.canvas.block)*app.canvas.block
+                    y = rand(0, app.canvas.width/app.canvas.block)*app.canvas.block
+                }
+                var m = new app.Obj("monster_"+app.monsterIndex)
+                app.monsterIndex++
+                m.vec.x = x
+                m.vec.y = y
+                m.class = OBJCLASS.MONSTER
+//                console.log(x, y)
+                app.monsters.push(m)
+                m.show()
+            },
+            stop: function () {
+                clearInterval(app.ticker)
+            },
+            Obj: function (id) {
+                if (id == undefined || app.objsMap[id] != undefined){
+                    return
+                }
+//                console.log(this)
+                this.id = id
+                this.vec = {
+                    x:0, y:0,
+                    equal: function (vec) {
+                        return this.x == vec.x && this.y == vec.y
+                    }
+                }
+                this.valid = false
+                this.toward = 0
+                this.block = 10
+                this.ticker = ""
+                this.speed = 5
+                this.class = OBJCLASS.NONE
+                this.kill = 0
+                this.bullet = {}
+                this.belong = 0
+                this.move = function () {
+                    if (!this.valid || this.toward <= 0 ){
+                        return
+                    }
+                    switch (this.toward){
+                        case TOWARD.TOP:
+                            if (this.vec.y <= 0){
+                                break
+                            }
+                            this.vec.y -= this.block
+                            break
+                        case TOWARD.RIGHT:
+                            if (this.vec.x >= app.canvas.width - this.block){
+                                break
+                            }
+                            this.vec.x += this.block
+                            break
+                        case TOWARD.DOWN:
+                            if (this.vec.y >= app.canvas.height - this.block){
+                                break
+                            }
+                            this.vec.y += this.block
+                            break
+                        case TOWARD.LEFT:
+                            if (this.vec.x <= 0){
+                                break
+                            }
+                            this.vec.x -= this.block
+                            break
+                    }
+                }
+                this.show = function () {
+                    this.valid = true
+                }
+                this.run = function () {
+                    var _this = this
+                    this.ticker = setInterval(function () {
+                        _this.move()
+                        _this.checkCrash()
+                    }, 1000/this.speed)
+                }
+                this.checkCrash = function () {
+                    var _id = this.id
+                    var _this = this
+                    for (var id in app.objsMap){
+                        if (id == _id){
+                            continue
+                        }
+                        if (app.objsMap[id].vec.equal(_this.vec)){
+//                            console.log(app.objsMap[id].vec,_this.vec)
+                            app.handleCrash(_this, app.objsMap[id])
+                        }
+                    }
+                }
+                this.stop = function () {
+                    clearInterval(this.ticker)
+                }
+                this.destroy = function () {
+                    var _this = this
+                    delete app.objsMap[_this.id]
+                    Arrayremove(app.objs, _this)
+                    Arrayremove(app.monsters, _this)
+                }
+                var _this = this
+                app.objsMap[id] = _this
+                app.objs.push(_this)
+            },
+            initGamer: function(){
+                app.gamer = new app.Obj("gamer")
+                app.gamer.class = OBJCLASS.GAMER
+                app.gamer.toward = 2
+                app.gamer.show()
+            }
+        }
+    })
+
+//    console.log(app.objs)
+    app.initGamer()
+    console.log(app.objs)
+    app.run()
+
+    document.onkeydown = function(ev){
+//        console.log(ev)
+        var key = ev.code
+        switch (key){
+            case 'ArrowUp':
+                app.gamer.toward = TOWARD.TOP
+                break
+            case 'ArrowDown':
+                app.gamer.toward = TOWARD.DOWN
+                break
+            case 'ArrowRight':
+                app.gamer.toward = TOWARD.RIGHT
+                break
+            case 'ArrowLeft':
+                app.gamer.toward = TOWARD.LEFT
+                break
+        }
+    }
+
+</script>
+</html>

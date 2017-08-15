@@ -84,6 +84,7 @@ func init() {
 	beego.Router("/gm/gamer/search", &controllers.GamerController{}, "*:Search")
 	beego.Router("/gm/gamer/add_player", &controllers.GamerController{}, "*:AddPlayer")
 	beego.Router("/gm/gamer/update_player", &controllers.GamerController{}, "*:UpdatePlayer")
+	beego.Router("/gm/gamer/set_all_player", &controllers.GamerController{}, "*:SetAllPlayer")
 
 	beego.Router("/gm/mail/send_to_gamer", &controllers.GMMailController{}, "*:SendToGamer")
 	beego.Router("/gm/mail/index", &controllers.GMMailController{}, "*:Index")

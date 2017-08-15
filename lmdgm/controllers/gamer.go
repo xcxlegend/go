@@ -29,7 +29,7 @@ func (this *GamerController) Search() {
 		//this.Rsp(false, "param error id")
 		//return
 
-		id = models.RDSGetGIDByName(this.GetString("id"), c)
+		id = models.RDSGetGIDByName(this.GetString("name"), c)
 		if id <= 0 {
 			this.ResponseJson(nil)
 		}
@@ -48,6 +48,59 @@ func (this *GamerController) Search() {
 	}
 	this.ResponseJson(res)
 	return
+}
+
+func (this *GamerController) SetAllPlayer() {
+	var gid, _ = this.GetInt32("gid", 0)
+	if gid == 0 {
+		this.Rsp(false, "GID error")
+		return
+	}
+	var c = models.GetRdsClientByRid(0)
+	var players = models.RDSGetPlayers(gid, c)
+	var pids = map[int32]bool{}
+	for _, p := range players {
+		pids[*p.Id] = true
+	}
+
+	for pid, _ := range models.Doc.PlayerSdMainData {
+		if _, ok := pids[pid]; ok {
+			continue
+		}
+		var player = new(pb.Player)
+		player.Id = pb.Int32(pid)
+		player.Experience = pb.Int32(0)
+		var maxPlayerLv int32
+		if vMain, ok := models.Doc.PlayerSdMainData[pid]; ok {
+			for _, vLv := range models.Doc.PlayerLvUpData {
+				if vLv.GetPlayerLvUpId() == vMain.GetPlayerLvUpId() {
+					if vLv.GetPlayerLv() > maxPlayerLv {
+						maxPlayerLv = vLv.GetPlayerLv()
+					}
+				}
+			}
+		}
+		player.Level = pb.Int32(maxPlayerLv)
+		models.RDSAddPlayers(gid, player, c)
+	}
+
+	for _, player := range players {
+		var pid = *player.Id
+		var maxPlayerLv int32
+		if vMain, ok := models.Doc.PlayerSdMainData[pid]; ok {
+			for _, vLv := range models.Doc.PlayerLvUpData {
+				if vLv.GetPlayerLvUpId() == vMain.GetPlayerLvUpId() {
+					if vLv.GetPlayerLv() > maxPlayerLv {
+						maxPlayerLv = vLv.GetPlayerLv()
+					}
+				}
+			}
+		}
+		player.Level = pb.Int32(maxPlayerLv)
+		models.RDSUpdatePlayer(gid, player, c)
+	}
+
+	this.Rsp(true, "ok")
 }
 
 func (this *GamerController) AddPlayer() {
