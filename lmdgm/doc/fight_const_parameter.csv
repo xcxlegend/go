@@ -1,0 +1,4 @@
+防守最小停留时间,超远距离,卡位范围,超远距离内虚弱状态没投进且三不沾的概率,超远距离外没投进且三不沾概率,开场跳球等待时间,传球安全距离,传球不安全距离,基础防守区域夹角(单位：度),基础防守区域半径（万分率，米）,表情显示时间,表情CD,表情面板持续时间
+float,float,float,int,int,int,int,int,int,int,int,int,int
+guard_min_stay_time,super_shoot,box_out_range,air_ball_week,air_ball_super_shot,opening_show_time,pass_safe_distance_1,pass_safe_distance_2,defence_base_angle,defence_base_radius,emoji_desplay_time,emoji_cd,emoji_chose_desplay_time
+0.3,10.0,5.0,3000,5000,2,80000,110000,75,15000,30000,50000,50000

@@ -242,6 +242,9 @@ func (this *SyncController) SyncApp() {
 	}
 	var logServerHosts = []string{}
 	for _, server := range allServer {
+		if server.Status == 1 {
+			continue
+		}
 		logServerHosts = append(logServerHosts, server.OutHost)
 		var serverOption = &ssh.LoginOption{
 			Host:     server.Host,
@@ -319,6 +322,9 @@ func (this *SyncController) SyncConf() {
 	}
 	var logServerHosts = []string{}
 	for _, server := range allServer {
+		if server.Status == 1 {
+			continue
+		}
 		logServerHosts = append(logServerHosts, server.OutHost)
 		var serverOption = &ssh.LoginOption{
 			Host:     server.Host,

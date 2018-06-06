@@ -1,0 +1,7 @@
+ID,场景名,背景音乐1,权重1,bloom_threshold,bloom_intensity,bloom_blur_size,bloom_blur_iterations
+int,string,string_array,int_array,float,float,float,int
+id,sceneName,bgm_list,weight,bloom_threshold,bloom_intensity,bloom_blur_size,bloom_blur_iterations
+1,Scene0002,bgm_1*bgm_2*bgm_3*bgm_4*bgm_7,50*50*50*50*50,0.55,0.25,1.0,1
+2,Scene0003,bgm_1*bgm_2*bgm_3*bgm_4*bgm_7,50*50*50*50*50,0.5,0.3,1.0,1
+3,Scene0004,bgm_1*bgm_2*bgm_3*bgm_4*bgm_7,50*50*50*50*50,0.4,0.35,1.0,1
+4,Scene0005,bgm_1*bgm_2*bgm_3*bgm_4*bgm_7,50*50*50*50*50,0.5,0.3,1.0,1

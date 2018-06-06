@@ -1,0 +1,7 @@
+学校id,学校名,学校icon
+int,string,string
+school_id,school_name,school_icon
+1,湘北高中,
+2,陵南高中,
+3,海南附中,
+4,翔阳高中,

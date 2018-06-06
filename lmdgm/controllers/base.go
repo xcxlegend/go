@@ -51,6 +51,16 @@ const (
 	%s`
 	DBLOGNODEREMARK_TPL_CONFIG_DEL = `删除了CONFIG: 
 	%s`
+	DBLOGNODEREMARK_TPL_AREA_ADD = `添加了区服: 
+	%s`
+	DBLOGNODEREMARK_TPL_AREA_UPDATE = `更新了区服: 
+	%s`
+	DBLOGNODEREMARK_TPL_MAIL_SEND_TO_GAMER = `给玩家 (GId: %v) 发送了邮件:
+	%s`
+	DBLOGNODEREMARK_TPL_GAMER_ADD_PLAYER = `给玩家 (GId: %v) 添加了球员:
+	%s`
+	DBLOGNODEREMARK_TPL_GAMER_UPDATE_PLAYER = `给玩家 (GId: %v) 更新了球员:
+	%s`
 )
 
 type BaseController struct {

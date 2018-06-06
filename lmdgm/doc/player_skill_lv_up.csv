@@ -1,0 +1,4 @@
+技能ID,当前技能的等级,增加球队实力,技能升级的球员等级要求,技能升级时的金币消耗,技能升级时的材料消耗1,升级后的技能ID_填0表示不能再升级了,技能的原始模板id_用于标识技能是否属于同一个技能的不同等级
+int,int,int,int,ItemConfig,ItemConfig_array,int,int
+skill_id,skill_lv,skill_strength,player_lv_required,gold_required,material_required,skill_id_next_lv,skill_template
+1000101,1,100,10,10000002_100,30004001_1*30004001_1,1000102,1000101

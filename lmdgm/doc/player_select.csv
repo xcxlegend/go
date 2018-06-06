@@ -1,0 +1,6 @@
+招募id（index）,招募类型（1=普通球探 2=高级球探 3=明星球探）,招募的名字,招募的说明或描述,招募的开启条件类型_0=无条件、1=vip等级、2=球队等级、之后可能添加更多条件类型,开启类型的值_无条件时填0,每日免费次数_免费次数非0时_每天系统刷新时：球探的状态直接变为免费状态、免费次数恢复至所填的次数,免费机会的CD_单位为秒,招募获得道具数量,额外获得道具,该类型的招募免费抽卡卡池,首次抽选这个球探时_作为抽选范围的卡池id；填0表示无特殊处理,常规卡池,必中次数(暂定为10),第10次抽必中卡池,非热点卡池,热点卡池的序列,热点机率_千分率_热点机率非0时_首先根据此机率计算是否抽中热点,热点机率递增值_千分率；未抽中热点卡包则递增及率_抽中重置为0,热点必中次数,卡包背景资源图,卡包封面球员模板id,选拔开启时间（永久_则填0）,选拔持续时间（永久_则填0）,数据生效区域（开始服务器id_结束服务器id|开始服务器id_结束服务器id开始服务器id_结束服务器id|...）,抽消耗的道具,是否展示,每日限定次数
+int,int,string,string,int,int,int,int,int,ItemConfig,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,ItemConfig,int,int
+select_id,select_type,select_name,select_describe,open_requirement,requirement_value,free_times_everyday,free_cd,select_num,select_bunus,free_select_package,first_select_pack_id,mormal_pack_id,lucky_num,lucky_select_pack_id,select_pack,hotspot_pack,hotspot_odds,hotspot_increased_odds,hotspot_lucky_num,select_img_id,select_player_img_id,open_time,duration_time,server_on_off,need_select_item,is_show,limited_times
+101,1,普通招募,说明,0,0,5,600,1,20003001_1,1,2,1,999,1,2,1,1,1,10,10001,10001,0,0,1,20003001_1,1,100
+201,2,高级招募,说明,0,0,0,172800,1,20003001_1,1,2,2,10,1,3,1,1,1,10,10001,10001,0,0,1,20004001_1,1,100
+202,2,高级招募*10,说明,0,0,0,0,10,20003001_1,1,2,2,10,1,3,1,1,1,10,10001,10001,0,0,1,20004001_1,0,100

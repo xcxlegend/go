@@ -4,6 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
+	"time"
+	"unsafe"
 )
 
 // FileMd5 计算文件md5值
@@ -20,4 +22,20 @@ func Md5ByByte(b []byte) string {
 	md5Ctx.Write(b)
 	cipherStr := md5Ctx.Sum(nil)
 	return hex.EncodeToString(cipherStr)
+}
+
+type UUID struct {
+	Timestamp int32
+	ServerId  int16
+	Index     int16
+}
+
+var uuidIndex int16 = 0
+
+func GetUUID(server_id int16) int64 {
+	uuidIndex++
+	//fmt.Println(uuidIndex)
+	uuid := UUID{int32(time.Now().Unix()), server_id, uuidIndex}
+	//fmt.Println(uuid)
+	return *((*int64)(unsafe.Pointer(&uuid)))
 }

@@ -2,13 +2,15 @@ package events
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime"
 	"net"
 	"net/mail"
 	"net/smtp"
-	"github.com/astaxie/beego"
+
+	m "github.com/xcxlegend/go/lmdgm/models"
 )
 
 // Message 邮件发送数据
@@ -33,54 +35,58 @@ type Sender interface {
 	AsyncSend(msg *Message, isMass bool, handle func(err error)) error
 }
 
-var (
-	gmMailHost    string
-	gmMailAddr    mail.Address
-	gmMailPwd     string
-)
-
-// mail_manager init 初始化GM邮箱地址信息
-// Host GM邮箱所属的SMTP服务器地址
-// From GM邮箱的别名和邮箱址
-// FromPwd GM邮箱的密码
-func init(){
-	gmMailHost = beego.AppConfig.String("gm_mail_server")
-	gmMailAddr.Name = beego.AppConfig.String("gm_name")
-	gmMailAddr.Address = beego.AppConfig.String("gm_addr")
-	gmMailPwd = beego.AppConfig.String("gm_passwd")
+type GMailConfig struct {
+	GmMailHost        string `json:"gm_mail_server"`
+	GmMailAddrName    string `json:"gm_name"`
+	GmMailAddrAddress string `json:"gm_addr"`
+	GmMailPwd         string `json:"gm_passwd"`
 }
+
+func (p *GMailConfig) String() string {
+	return fmt.Sprintf("host:%s, name:%s, addr:%s, pwd:%s", p.GmMailHost, p.GmMailAddrName, p.GmMailAddrAddress, p.GmMailPwd)
+}
+
+const (
+	DBCONFIG_CODE_EMAIL = "email"
+)
 
 // CreateMessage 创建邮件内容
 // subject 邮件主题
 // content 支持html的消息主体
 // to 接收者邮箱地址列表
-func CreateMessage(subject string, content *bytes.Buffer, to []string) *Message{
+func CreateMessage(subject string, content string, to []string) *Message {
 	msg := &Message{
 		Subject: subject,
-		Content: content,
+		Content: bytes.NewBufferString(content),
 		To:      to,
 	}
 	return msg
 }
 
 // NewSmtpSenderWithGM 使用GM的邮箱配置创建基于smtp的邮件发送实例(使用PlainAuth)
-// addr 服务器地址
-// from 发送者
-// authPwd 验证密码
-// 如果创建实例发生异常，则返回错误
+// 从数据库中读取GM邮箱配置的IO慢操作，暂时放到这里， 后续有需要再进行优化
 func NewSmtpSenderWithGM() (Sender, error) {
-	if len(gmMailHost) == 0 || len(gmMailAddr.Address)==0 || len(gmMailPwd) == 0{
-		return nil, fmt.Errorf("check gm mail config in app.conf file")
+	var c = m.GetConfigByCode(DBCONFIG_CODE_EMAIL)
+	var econf = new(GMailConfig)
+	if err := json.Unmarshal([]byte(c), econf); err != nil {
+		return nil, fmt.Errorf("json unmarshaling failed:%s in %v", err, c)
+	}
+	if len(econf.GmMailHost) == 0 || len(econf.GmMailAddrAddress) == 0 || len(econf.GmMailPwd) == 0 {
+		return nil, fmt.Errorf("check gm mail config")
+	}
+	from := mail.Address{
+		Name:    econf.GmMailAddrName,
+		Address: econf.GmMailAddrAddress,
 	}
 	smtpCli := &SmtpClient{
-		addr: gmMailHost,
-		from: gmMailAddr,
+		addr: econf.GmMailHost,
+		from: from,
 	}
-	host, _, err := net.SplitHostPort(gmMailHost)
+	host, _, err := net.SplitHostPort(econf.GmMailHost)
 	if err != nil {
 		return nil, err
 	}
-	smtpCli.auth = smtp.PlainAuth("", gmMailAddr.Address, gmMailPwd, host)
+	smtpCli.auth = smtp.PlainAuth("", from.Address, econf.GmMailPwd, host)
 	return smtpCli, nil
 }
 

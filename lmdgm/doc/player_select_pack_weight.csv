@@ -1,0 +1,6 @@
+卡池权重id,卡包1,权重1,卡包2,权重2,卡包3,权重3,卡包4,权重4,卡包5,权重5,卡包6,权重6
+int,int,int,int,int,int,int,int,int,int,int,int,int
+package_id,pack_1,weight_1,pack_2,weight_2,pack_3,weight_3,pack_4,weight_4,pack_5,weight_5,pack_6,weight_6
+1,1,10000,0,0,0,0,0,0,0,0,0,0
+2,2,5000,3,5000,0,0,0,0,0,0,0,0
+3,1,2000,2,4000,3,20000,0,0,0,0,0,0

@@ -1,0 +1,4 @@
+﻿ID,[球员ID]1,[球员等级]1,[球员ID]2,[球员等级]2,[球员ID]3,[球员等级]3,[球员ID]4,[球员等级]4,[球员ID]5,[球员等级]5,金币,钻石
+int,int_array,int_array,int_array,int_array,int_array,int_array,int_array,int_array,int_array,int_array,int,int
+id,player_id_1,player_lv_1,player_id_2,player_lv_2,player_id_3,player_lv_3,player_id_4,player_lv_4,player_id_5,player_lv_5,money,diamond
+1,1,1,2,2,3,3,4,4,5,5,100,100

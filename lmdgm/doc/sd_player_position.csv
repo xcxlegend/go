@@ -1,0 +1,8 @@
+位置ID,位置名称,位置图标
+int,string,string
+position_id,position_name,position_icon
+100,PG,1001.0
+200,SG,1001.0
+300,SF,1001.0
+400,PF,1001.0
+500,C,1001.0

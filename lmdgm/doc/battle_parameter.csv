@@ -1,0 +1,72 @@
+ID,倍数_参数_1,倍数_参数_2,倍数_参数_3,倍数_参数_4,倍数_参数_5,基础_参数_1,基础_参数_2,基础_参数_3,基础_参数_4
+int,int,int,int,int,int,int,int,int,int
+id,multiple_para_1,multiple_para_2,multiple_para_3,multiple_para_4,multiple_para_5,base_para_1,base_para_2,base_para_3,base_para_4
+1,1000000,3500,50000,,,600000,450000,55000,,Speed,无球跑动:MIN((MAX(无球速度,base_para_1)-base_para_2)/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_3） 
+2,1000000,3500,50000,,,600000,450000,55000,,DribbleSpeed,运球跑动:MIN((MAX(运球速度,base_para_1)-base_para_2)/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_3）
+3,11500,,,,,,,,,SpeedUp,无球加速:无球跑动速度 * multiple_para_1
+4,11500,,,,,,,,,DribbleSpeedUp,有球加速:有球跑动速度 * multiple_para_1
+5,10000,,,,,,,,,DefensiveSpeed,防守速度:移动速度* multiple_para_1
+6,10000,,,,,,,,,XDefensiveSpeed,严防速度:移动速度* multiple_para_1
+7,20000,,,,,,,,,XDefensiveBody,严防碰撞体积扩大:* multiple_para_1
+8,5000,,,,,,,,,PostUpSpeed,背身靠打速度:运球速度* multiple_para_1
+9,8500,,,,,,,,,AgainstDefensiveSpeed,持球人被严防减速：持球人持球速度* multiple_para_1
+100,500,,,,,,,,,DisurbRateDefalut,未起跳默认干扰率 multiple_para_1+其他增加干扰率-抗干扰率
+101,11500,,,,,8000000,,,,DisurbRate,干扰率:干扰值/(抗干扰值*multiple_para_1+base_para_1)+其他增加干扰率-抗干扰率【投放5%左右】
+102,2000000,4500,,,,9000,,,,TwoPointsPercentage,2分球投篮成功率:MIN(基础两分命中*(自身三分值/multiple_para_1)^multiple_para_2*（1-干扰率）+[0.2空位修正],base_para_1)【基础两分命中0.6】
+103,1000000,3500,90000,150000,,9000,10000,100,,ThreePointsPercentage,3分球投篮成功率:MAX(MIN(基础三分命中*(自身三分值/multiple_para_1)^multiple_para_2*（1-干扰率）+[0.1空位修正],base_para_1)*MIN((multiple_para_3/离篮筐距离)^multiple_para_4,base_para_2),base_para_3)【基础三分命中0.35】
+111,,,,,,900000,,,,DunkMin,扣篮触发的最小属性，当球员的扣篮值小于该属性时，不能扣篮
+112,8000000,4000,30000,,,800000,41000,20000,,DunkRange,扣篮最大范围:MIN(base_para_3+(MAX((扣篮值-base_para_1),0)/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_2)
+114,5000000,2500,,,,9500,,,,DunkPercentage,扣篮成功概率:min(基础扣篮命中*(自身扣篮值/multiple_para_1)^multiple_para_2*（1-干扰率）+[0.1空位修正],base_para_1)【基础扣篮命中0.9】
+122,8000000,4000,40000,,,800000,45000,20000,,LayUpRange,上篮最大范围:MIN(base_para_3+(MAX((上篮值-base_para_1),0)/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_2)
+124,2500000,5000,,,,9500,,,,LayUpPercentage,上篮成功概率:min(基础上篮命中*(自身上篮值/multiple_para_1)^multiple_para_2*（1-干扰率）+[0.2空位修正],base_para_1)【基础上篮命中0.85】
+132,36000,,,,,,,,,CloseShootRange,近投最大范围:multiple_para_1
+134,8000000,3000,,,,8000,,,,CloseShootPercentage,近投投篮成功率:min(基础近投命中*(自身近投值/multiple_para_1)^multiple_para_2*（1-干扰率）+[0.3空位修正],base_para_1)【基础近投命中0.8】
+141,15000,15000,20000,,,,,,,DunkNoOperation,原地扣篮概率:扣篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3)
+151,20000,20000,100,100,,,,,,DunkCloseShoot,可近投扣篮，扣篮概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+152,21000,100,100,21000,,,,,,LayUpCloseShoot,可近投上篮：上篮概率：上篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+153,20000,20000,100,21000,,,,,,DunkCloseShootLayUp,可近投扣篮上篮，扣篮概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+154,21000,20000,100,21000,,,,,,LayUpCloseShootDunk,可近投扣篮上篮，上篮概率：上篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+161,20000,20000,100,100,,,,,,DunkTwoPoints,可中投扣篮，扣篮概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+162,21000,100,100,21000,,,,,,LayUpTwoPoints,可中投上篮：上篮概率：上篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+163,20000,20000,100,21000,,,,,,DunkTwoPointsLayUp,可中投扣篮上篮，扣篮概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+164,21000,20000,100,21000,,,,,,LayUpTwoPointsDunk,可中投扣篮上篮，上篮概率：上篮值^multiple_para_1/(扣篮值^multiple_para_2+近投值^multiple_para_3+上篮值^multiple_para_4)
+165,15000,100000,700000,,,10000,200000,2000,10000,DunkOnlyAgainstPercentage,扣篮范围内有防守操作正确扣篮触发力量对抗公式扣篮概率：MIX(MAX(multiple_para_1/(base_para_1+multiple_para_2^((对手力量-自身力量+base_para_2)/multiple_para_3))+其他增加扣篮触发概率,base_para_3),base_para_4)
+166,15000,100000,700000,,,10000,200000,2000,10000,LayUpOnlyAgainstPercentage,扣篮范围内有防守操作正确扣篮触发力量对抗公式扣篮概率：MIX(MAX(multiple_para_1/(base_para_1+multiple_para_2^((对手力量-自身力量+base_para_2)/multiple_para_3))+其他增加上篮触发概率,base_para_3),base_para_4)
+167,21500,21500,20000,,,,,,,DunkAgainstPercentage,操作正确时同时可上篮扣篮的扣篮触发概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+上篮值^multiple_para_3)
+168,,,,,,,,,,LayUpAgainstPercentage,操作正确时同时可上篮扣篮的上篮触发概率：1-扣篮概率
+169,20000,20000,21000,,,,,,,DunkAgainstPercentage,操作正确时同时可上篮扣篮的扣篮触发概率：扣篮值^multiple_para_1/(扣篮值^multiple_para_2+上篮值^multiple_para_3)
+170,,,,,,,,,,LayUpAgainstPercentage,操作正确时同时可上篮扣篮的上篮触发概率：1-扣篮概率
+201,1000000,6000,10000,,,16000,4000,,,ReboundRange,抢板范围：R=MAX(MIN((篮板值/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_1),base_para_2)+【0.2额外投放】
+202,2500000,6000,9000,,,10000,4000,,,ReboundJump,抢板弹跳高度：H=MAX(MIN((弹跳值/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_1),base_para_2)+【0.2额外投放】
+203,10000,,,,,,,,,ReboundPlayerHigh,抢板身高影响：角色身高/multiple_para_1
+204,10000,10000,6000,,,,,,,ReboundHigh,抢板高度：抢板范围*multiple_para_1+抢板弹跳高度*multiple_para_2+抢板身高影响*multiple_para_3
+205,,,,,,2000,,,,ReboundDelay,抢板延迟时间：base_para_1
+206,22000,,,,,,,,,ReboundRatio,抢板篮板值比较指数参数：(自身篮板值/multiple_para_2)^multiple_para_1/((自身篮板值/multiple_para_2)^multiple_para_1+(可做比较的球员2的篮板值/multiple_para_2)^multiple_para_1+(可做比较的球员3的篮板值/multiple_para_2)^multiple_para_1……)
+211,1500000,1000,8000,,,11000,7000,,,BlockRange,盖帽范围:R=MAX(MIN((盖帽值/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_1),base_para_2)+【0.3~0.4额外投放】
+212,2500000,6000,9000,,,10000,4000,,,BlockJump,盖帽弹跳高度：H=MAX(MIN((弹跳值/multiple_para_1)^multiple_para_2*multiple_para_3,base_para_1),base_para_2)+【0.2额外投放】
+213,30000,30000,30000,,,1000,,,,BlockOkLayUpDownPercentage,盖帽成功盖翻对手(上篮):(自身盖帽)^multiple_para_1/((自身盖帽)^multiple_para_2+(目标上篮)^multiple_para_3)+base_para_1
+215,30000,30000,30000,,,2000,,,,BlockOkDunkDownPercentage,盖帽成功盖翻对手(扣篮):(自身盖帽)^multiple_para_1/((自身盖帽)^multiple_para_2+(目标扣篮)^multiple_para_3)+base_para_2
+216,10000,,,,,,,,,BlockPlayerHigh,盖帽身高影响：角色身高/multiple_para_1
+217,10000,10000,5000,,,,,,,BlockHigh,盖帽范围高度：盖帽范围R*multiple_para_1+盖帽弹跳高度H*multiple_para_2+盖帽身高影响*multiple_para_3
+221,,,,,,8000,15000,,,Intercept,抢断触发率（飞行时）：普通拦截:与球的轨迹线距离不超过0.8米，且拦截点距离传球者超过1.5米。
+222,,,,,,8000,12000,,,InterceptExtra,抢断触发率（飞行时）：飞身扑球:与球的轨迹线距离为0.8~1.2米之间
+223,5000,5000,800000,5000,50000,1000,5000,,,InterceptBallOutPercentage,抢断成功，球打飞概率:MIN(base_para_1+MAX((MAX(断球者抢断值-传球者传球值*multiple_para_1-接球者传球值*multiple_para_2,0)/multiple_para_3)^multiple_para_4/multiple_para_5,0),base_para_2)
+224,5000,5000,800000,8000,50000,1000,5000,,,InterceptBallInPercentage,抢断成功，球上手概率:MIN(base_para_1+MAX((MAX(断球者抢断值-传球者传球值*multiple_para_1-接球者传球值*multiple_para_2,0)/multiple_para_3)^multiple_para_4/multiple_para_5,0),base_para_2)
+231,20000,,,,,,,,,StealRange,偷球有效距离:偷球人和篮球的水平距离<=multiple_para_1
+232,1000,,,,,10000,12000,,,StealBallOutPercentage,偷球成功球打飞概率:(multiple_para_1*(base_para_1-偷球成功球拿手上概率))*Sign[base_para_2-自身与篮球的水平距离]【大于等于0，结果为1，小于0为0】
+233,800000,5500,10000,,,6000,9000,9900,,StealBallInPercentage,偷球成功球拿手上概率:MIN(MAX((MAX(自身抢断-目标运球,0)/multiple_para_1)^multiple_para_2/multiple_para_3-base_para_1,0),base_para_2)*Sign[base_para_3-自身与篮球的水平距离]
+312,800000,3000,30000,,,5000,,,,BreakNoKnockedDownPercentage,突破失败被撞倒概率:MIN(MAX((MAX(对手力量-自身力量,0)/multiple_para_1)^multiple_para_2/multiple_para_3,0),base_para_1)
+313,800000,1000,50000,,,5000,,,,BreakNoKnockedBackPercentage,突破失败被撞退(撞停)概率:MIN（1-突破失败被撞倒概率）*(MAX(对手力量-自身力量,0)/multiple_para_1)^multiple_para_2/multiple_para_3,base_para_1)
+314,1600000,3500,1000000,,,,,,,BreakOkShakeDownPercentage,突破成功晃倒对手概率:(MAX((自身运球+自身敏捷-对手运球-对手敏捷),0)/multiple_para_1)^multiple_para_2/multiple_para_3*对手位置修正【C：0.5；PF：0.7；SF：0.8；SG：0.9；PG：1】
+412,,,,,,2000,,,,DribbleKnockedHoldBallPercentage_1,运球被撞双手持球概率:自身力量>对手力量,base_para_1
+413,500000,6000,60000,,,2000,5000,,,DribbleKnockedHoldBallPercentage_2,运球被撞双手持球概率:自身力量<=对手力量,MIN((((对手力量-自身力量)/multiple_para_1)^multiple_para_2/multiple_para_3+base_para_1）,base_para_2)[范围0.1~0.35，0.1的成长空间]
+421,800000,4000,20000,,,800000,2000,10000,,BoxoutOpponentPercentage_1,卡位挤别人概率:目标在卡位状态中,MIN((MAX(自身力量+base_para_1-对手力量,0)/multiple_para_1)^multiple_para_2/multiple_para_3+base_para_2,base_para_3)
+422,,,,,,10000,,,,BoxoutOpponentPercentage_2,卡位挤别人概率:目标不再在卡位状态中,base_para_1
+423,800000,4000,20000,,,800000,10000,,,PostUpOkPercentage,背打挤人概率:MIN((MAX(自身力量+base_para_1-对手力量,0)/multiple_para_1)^multiple_para_2/multiple_para_3,base_para_2)
+431,800000,800000,,,,60000,60000,100000,,PassSecureRange,传球OVER距离:MIN(Max(base_para_1+传球者传球值/multiple_para_1+接球者传球值/multiple_para_2,base_para_2)+其他增加传球安全距离,base_para_3)
+433,1600000,6000,250000,,,100,8000,,,PassBallUnsteadyPercentage,接球接不稳概率(over距离内):MIN(MAX((MAX(防守区域球员干扰值之和-传球者传球值-接球者控球值,0)/multiple_para_1)^multiple_para_2/multiple_para_3,base_para_1)+其他增加安全距离内接飞概率,base_para_2)
+435,1600000,6000,100000,100000,25000,1,10000,10000,,SuperPassBallOutPercentage,over接球接飞概率:MIN(MAX((MAX(防守区域球员干扰值之和-传球者传球值-接球者控球值,0)/multiple_para_1)^multiple_para_2/multiple_para_3,base_para_1)*MAX((点击传球时传接球两人间的距离/multiple_para_4)^multiple_para_5,base_para_2)+其他增加传飞概率,base_para_3)
+436,1600000,1000,100000,100000,25000,1000,500,10000,10000,SuperPassBallUnsteadyPercentage,over接球接不稳概率:MIN(MAX((base_para_1-over接球接不稳概率)*(MAX(对手干扰值之和-传球者传球值-接球者控球值,0)/multiple_para_1)^multiple_para_2/multiple_para_3,base_para_2)*MAX((点击传球时传接球两人间的距离/multiple_para_4)^multiple_para_5,base_para_3),base_para_4-over接球接不稳概率)
+511,5000000,6000,,,,2500,,,,AgilityAddSpeed,敏捷增加无球跑动速度加成:MAX((敏捷值/multiple_para_1)^multiple_para_2-base_para_1,0)
+512,8000,5000000,6000,,,2500,,,,AgilityAddDribbleSpeed,敏捷增加运球跑动速度加成:MAX((multiple_para_1*敏捷值/multiple_para_2)^multiple_para_3-base_para_1,0)
+515,800000,3500,30000,,,2500,,,,AgilityAddStealPercentage,敏捷增加对手无操作时偷球上手成功率:MAX((敏捷值/multiple_para_1)^multiple_para_2/multiple_para_3-base_para_1,0)【80额外增加0.003/120额外增加0.05/230额外增加0.1】

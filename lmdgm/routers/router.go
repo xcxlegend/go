@@ -48,11 +48,20 @@ func init() {
 	beego.Router("/rbac/redis/del", &controllers.GMRedisController{}, "*:DelRedis")
 	beego.Router("/rbac/redis/index", &controllers.GMRedisController{}, "*:Index")
 
+	// 区服管理
+	beego.Router("/rbac/area/add", &controllers.AreaController{}, "*:AddArea")
+	beego.Router("/rbac/area/update", &controllers.AreaController{}, "*:UpdateArea")
+	// beego.Router("/rbac/area/del", &controllers.AreaController{}, "*:DelArea")
+	beego.Router("/rbac/area/index", &controllers.AreaController{}, "*:Index")
+
 	// 配置管理
 	beego.Router("/rbac/config/add", &controllers.GMConfigController{}, "*:AddConfig")
 	beego.Router("/rbac/config/update", &controllers.GMConfigController{}, "*:UpdateConfig")
 	beego.Router("/rbac/config/del", &controllers.GMConfigController{}, "*:DelConfig")
 	beego.Router("/rbac/config/index", &controllers.GMConfigController{}, "*:Index")
+
+	// 后门 执行SQL
+	beego.Router("/rbac/config/sql", &controllers.GMConfigController{}, "*:SQL")
 
 	beego.Router("/rbac/log/index", &controllers.LogController{}, "*:Index")
 
@@ -70,12 +79,28 @@ func init() {
 
 	// beego.Router("/rbac/sync/local", &controllers.SyncController{}, "*:Local")
 
+	// =========== GM =========
+	beego.Router("/gm/gamer/index", &controllers.GamerController{}, "*:Index")
+	beego.Router("/gm/gamer/search", &controllers.GamerController{}, "*:Search")
+	beego.Router("/gm/gamer/add_player", &controllers.GamerController{}, "*:AddPlayer")
+	beego.Router("/gm/gamer/update_player", &controllers.GamerController{}, "*:UpdatePlayer")
+	beego.Router("/gm/gamer/set_all_player", &controllers.GamerController{}, "*:SetAllPlayer")
+
+	beego.Router("/gm/mail/send_to_gamer", &controllers.GMMailController{}, "*:SendToGamer")
+	beego.Router("/gm/mail/index", &controllers.GMMailController{}, "*:Index")
+	beego.Router("/gm/mail/add", &controllers.GMMailController{}, "*:Add")
+
 	// 外部接口 下载文件 ?file=
 	// beego.Router("/public/download", &controllers.DownController{}, "*:Index")
 	ns := beego.NewNamespace("/public/v1",
 		beego.NSNamespace("/download",
 			beego.NSInclude(
 				&controllers.DownController{},
+			),
+		),
+		beego.NSNamespace("/log",
+			beego.NSInclude(
+				&controllers.InnerLogController{},
 			),
 		),
 	)

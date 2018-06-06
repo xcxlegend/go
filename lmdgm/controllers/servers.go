@@ -1,7 +1,13 @@
 package controllers
 
 import (
+	"net/url"
 	"regexp"
+	"time"
+
+	"gopkg.in/vmihailenco/msgpack.v2"
+
+	"gopkg.in/redis.v5"
 
 	"github.com/beego/admin/src/models"
 
@@ -20,6 +26,21 @@ import (
 	"github.com/xcxlegend/go/ssh"
 )
 
+type ServerInfo struct {
+	Id               *int32  `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Lid              *int32  `protobuf:"varint,2,opt,name=lid" json:"lid,omitempty"`
+	Name             *string `protobuf:"bytes,3,opt,name=name" json:"name,omitempty"`
+	CmdAddr          *string `protobuf:"bytes,4,opt,name=cmdAddr" json:"cmdAddr,omitempty"`
+	RpcAddr          *string `protobuf:"bytes,5,opt,name=rpcAddr" json:"rpcAddr,omitempty"`
+	ExtAddr          *string `protobuf:"bytes,6,opt,name=extAddr" json:"extAddr,omitempty"`
+	LastTick         *int64  `protobuf:"varint,7,opt,name=lastTick" json:"lastTick,omitempty"`
+	ServerType       *string `protobuf:"bytes,8,opt,name=serverType" json:"serverType,omitempty"`
+	Load             *int32  `protobuf:"varint,9,opt,name=load" json:"load,omitempty"`
+	Conf             *string `protobuf:"bytes,10,opt,name=conf" json:"conf,omitempty"`
+	OnlineCount      *int32  `protobuf:"varint,11,opt,name=onlineCount" json:"onlineCount,omitempty"`
+	XXX_unrecognized []byte  `json:"-"`
+}
+
 //ServersController 服务器管理控制器
 type ServersController struct {
 	BaseController
@@ -27,11 +48,13 @@ type ServersController struct {
 
 //AppStatResponse 应用配置运行状态
 type AppStatResponse struct {
-	PID      string `json:"pid"`
-	ServerId int64  `json:"server_id"`
-	Stime    string `json:"stime"`
-	Conf     string `json:"confile"`
-	IsRun    bool   `json:"is_run"`
+	PID         string `json:"pid"`
+	ServerId    int64  `json:"server_id"`
+	Stime       string `json:"stime"`
+	Conf        string `json:"confile"`
+	IsRun       bool   `json:"is_run"`
+	Ltime       string `json:"ltime"`
+	OnlineCount int32  `json:"onlineCount"`
 }
 
 type AppStatResponseList []*AppStatResponse
@@ -73,7 +96,9 @@ func (this *ServersController) Index() {
 	if this.IsAjax() {
 		servers, count := m.GetServerList(page, page_size, sort)
 		for _, s := range servers {
-			this.getServerMount(s)
+			if s.Status == 1 {
+				this.getServerMount(s)
+			}
 		}
 		this.Data["json"] = &map[string]interface{}{"total": count, "rows": &servers}
 
@@ -103,7 +128,7 @@ func (this *ServersController) AddServer() {
 		// 获取内网地址
 		this.getServerHost(&s)
 	}
-
+	s.Status = 2
 	id, err := m.AddServer(&s)
 	if err == nil && id > 0 {
 
@@ -159,6 +184,7 @@ func (this *ServersController) UpdateServer() {
 		this.getServerHost(&o)
 		s.Host = o.Host
 	}
+	//fmt.Println(s.Status)
 	id, err := m.UpdateServer(&s)
 	if err != nil {
 		this.Rsp(false, err.Error())
@@ -246,6 +272,43 @@ func (this *ServersController) GetStat() {
 		}
 	}
 
+	// 从redis获取运行情况
+	var redisconf = m.GetMainRedis()
+	// redisconf
+	var Client = redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", redisconf.Host, redisconf.Port),
+		Password: "",
+		PoolSize: 5,
+	})
+	serverInfo, err := Client.HGetAll("server.info").Result()
+	// beego.Error("redis:", serverInfo, err)
+	if err == nil {
+		for _, info := range serverInfo {
+			var s = new(ServerInfo)
+			var err = msgpack.Unmarshal([]byte(info), s)
+			// fmt.Println(s)
+			if s.Conf == nil || s.RpcAddr == nil {
+				continue
+			}
+			var rpcaddr = *(s.RpcAddr)
+			urls, err := url.Parse(rpcaddr)
+			if err != nil {
+				continue
+			}
+			// beego.Debug("ser:", serv.Host, serv.OutHost, urls.Hostname())
+			if serv.Host != urls.Hostname() && serv.OutHost != urls.Hostname() {
+				continue
+			}
+			var conf = *(s.Conf)
+			conf = strings.Replace(conf, "\\", "/", -1)
+			var c = path.Base(conf)
+			// beego.Error("msg:", s, err, *(s.LastTick), *(s.Conf), c)
+			if run, ok := runcommands[c]; ok {
+				run.Ltime = fmt.Sprintf("%v", time.Unix(*(s.LastTick), 0).Format("2006-01-02 15:04:05"))
+				run.OnlineCount = *s.OnlineCount
+			}
+		}
+	}
 	// beego.Debug(c, err, string(<-ch))
 	// this.Rsp(true, )
 	var res = AppStatResponseList{}

@@ -122,10 +122,10 @@ func DelRedisById(Id int64) (int64, error) {
 }
 
 //GetRedisById 根据ID获取Redis信息
-func GetRedisById(id int64) (s Redis) {
-	s = Redis{Id: id}
+func GetRedisById(id int64) (s *Redis) {
+	s = &Redis{Id: id}
 	o := orm.NewOrm()
-	o.Read(&s, "Id")
+	o.Read(s, "Id")
 	return s
 }
 

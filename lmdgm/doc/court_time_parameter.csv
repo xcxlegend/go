@@ -1,0 +1,4 @@
+比赛总时间（秒）,单次进攻为例时间（秒）,进球转场时间（秒）,半场长度,半场宽度,三分矩形长度,三分矩形宽度,球框中心距离底线距离,三分距离球框中心距离,球框高度,比赛321读秒前的时间,比赛最长时间,跳球前的准备时间 ,转场暂停时间,屏幕变黑时间,转场暂停时间,屏幕变透明时间,最长发球时间,换人CD时间
+int,int,int,float,float,float,float,float,float,float,float,float,float,float,float,float,float,float,float
+match_time,time_shot_clock_violation,time_exchange_court,half_length,half_width,three_rect_length,three_rect_width,hool_leave_boarder,three_line_leave_hool,hool_height,match_pre_ready_time,match_max_time,match_ready_time,match_pause_time,match_fadein_time,match_black_time,match_fadeout_time,match_serve_wait_time,match_switch_player_time
+150,18,2,14.2,15.0,4.9,12.7,1.6,6.95,3.048,3.5,300.0,4.0,3.0,0.25,0.42,0.33,5.0,45.0

@@ -1,0 +1,18 @@
+ID,体形标识,角色模型,缩放系数,头顶ui高度,识别码,特殊动作
+int,string,string,int,float,string,string_array
+id,modetype,modeName,scale,head_ui_height,identification,specialAnimation
+99010410,樱木花道,m,M_c0001,111,2.31,ymhd,stand_dunk_putback*pickup_dive*pickup_dive_fail*pickup_dive_succ*stand_dunk_fly*phantom_defence
+99010311,流川枫,m,M_c0002,110,2.29,lcf,dunk_dclutchdunk*stand_dunk*turn_break_l_r_l*turn_break_r_l_r*break_shoot_l*break_shoot_r
+99010504,赤木刚宪,l,L_c0003,104,2.39,cmgx,gorilla_dunk*block_flap
+99010107,宫城良田,s,S_c0004,112,2.1,gclt,run_layup_l*run_layup_r*stand_layup_r*stand_layup_l*break_l_l_l*break_l_r_l*break_r_l_r*break_r_r_r*run_pass_l*run_pass_r*stand_pass_l*stand_pass_r
+99010214,三井寿,m,M_c0005,108,2.26,sjs,shoot_perfect*stepback_shoot_l*stepback_shoot_r
+99020307,仙道 彰,m,M_c0006,111,2.32,xdz
+99020504,鱼住 纯,l,L_c0007,106,2.44,yzc,blockcatch_m*twohand_block*stand_Violence_dunk
+99020413,福田吉兆,m,M_c0008,111,2.3,ftjz
+99023408,植草智之,s,S_c0009,113,2.12,zczz
+99023406,越野宏明,s,S_c0010,116,2.16,yyhm
+99040104,藤真健司,s,S_c0011,119,2.2,tzjs
+99030310,清田信长,s,S_c0017,100,2.2,qtxc
+99030206,神宗一郎,m,M_c0019,100,2.2,szyl
+99030104,牧绅一,m,M_c0016,100,2.2,msy
+99030409,武藤正,m,M_c0018,100,2.2,wtz
