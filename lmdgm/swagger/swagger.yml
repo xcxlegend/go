@@ -24,3 +24,24 @@ paths:
           description: '{file}'
         "404":
           description: Not Found
+  /log/upload:
+    post:
+      tags:
+      - log
+      description: 上传
+      operationId: InnerLogController.Post Upload logs
+      parameters:
+      - in: formData
+        name: file
+        description: 以文件类型上传
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '{"status": true}'
+        "401":
+          description: Unauthorized
+tags:
+- name: log
+  description: |
+    InnerLogController 日志上传

@@ -175,7 +175,7 @@ var URL="/public"
 <body class="easyui-layout" style="text-align:left">
 <div region="north" border="false" style="overflow: hidden; width: 100%; height:82px; background:#D9E5FD;">
     <div style="overflow: hidden; width:200px; padding:2px 0 0 5px;">
-        <h2>LMD GM</h2>
+        <h2>SD GM [{{.runmode}}]</h2>
     </div>
  <!--    <ul class="ht_nav">
         {{range .groups}}
@@ -227,5 +227,20 @@ var URL="/public"
     <div type="closeOther">关闭其他</div>
     <div type="closeAll">关闭所有</div>
 </div>
+<script>
+$( function() {
+    var home = '{{.userinfo.Home}}'
+    if (home != "") {
+        var content = '<iframe scrolling="auto" frameborder="0"  src="' + home + '" style="width:100%;height:100%;"></iframe>'
+        $("#tabs").tabs('add', {
+            title: "Home",
+            content: content,
+            closable: true,
+            cache: false,
+            fit: 'true'
+        });
+    }
+});
+</script>
 </body>
 </html>

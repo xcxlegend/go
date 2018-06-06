@@ -37,6 +37,7 @@
     </div>
     <div id="base_menu" class="easyui-menu" style="width:120px;">
         <div onclick="sync()" data-options="iconCls:'icon-add'">Sync</div>
+        <div onclick="editGlobal()" data-options="iconCls:'icon-edit'">修改Global配置</div>
     </div>
     <div id="msgwindow"></div>
     <div id="tb" style="height:auto">
@@ -45,9 +46,21 @@
         <a href="javascript:void(0)" id="fileButton" title="Sync" class="easyui-linkbutton easyui-tooltip" data-options="iconCls:'icon-add',plain:true" onclick="sync()">Sync</a>
         <input type="file" style="display: none" id="file" name="file" />
     </div>
-    <div id="file_alert" title="文件上传" data-options="iconCls:'icon-save'" style="width:300px;height:100px;padding:10px"></div>
-
+    <div id="file_alert" title="文件上传" data-options="iconCls:'icon-save'" style="width:600px;height:400px;padding:10px"></div>
+    <div id="dialog" title="添加服务器" style="width:400px;height:400px;">
+        <div style="padding:20px 20px 40px 80px;">
+            <form id="form1" method="post">
+                <table>
+                    <!--<tr>-->
+                        <!--<td>服务名：</td>-->
+                        <!--<td><input name="ServerName" class="easyui-validatebox" required="true" /></td>-->
+                    <!--</tr>-->
+                </table>
+            </form>
+        </div>
+    </div>
     <script type="text/javascript">
+        var URL = "/rbac/dir";
         // $(function () {
         $('#fileButton').tooltip({
                 position: "right"
@@ -71,8 +84,9 @@
                 dataType: 'json', //服务器返回的数据类型      
                 timeout: 0,
                 success: function(data, status) { //提交成功后自动执行的处理函数
+                    var c = data.checkres.replace(/\n/g,"<br/><br/>")
                     $('#file_alert').dialog({
-                        content: data.info,
+                        content: data.info + "<br/>" + c,
                     })
                     $("#tg").treegrid('reload')
                     $('#file').val("")
@@ -102,6 +116,67 @@
 
             })
         }
+
+        function editGlobal(row) {
+
+            var row = row || $("#tg").datagrid("getSelected");
+            $.get(URL +　'/global_editor?file=' + row.full_path, {}, function (data) {
+                if (!data.status){
+                    vac.alert(data.info);
+                    $("#dialog").dialog("close");
+                    return
+                }
+
+                var table = '<input type="hidden" name="file" value="'+row.full_path+'">'
+                $.each(data.data, function (i, e) {
+                    table += '<tr>'+
+                    '<td>'+e[0]+'：</td>'+
+                    '<td><input type="hidden" name="global_names[]" class="easyui-validatebox" value="'+e[1]+'" /></td>'+
+                    '<td><input name="global_values[]" style="width: 300px" class="easyui-validatebox" value="'+e[3]+'" /></td>'+
+                        '</tr>'
+                })
+
+
+                $('#form1 table').html(table)
+
+                $('#dialog').dialog({
+//                href: URL +　'/global_editor?file=' + row.full_path,
+                    width: 700,
+                    height: 500,
+                    modal: true,
+                    cache: false,
+                    title: row.path + ": 修改global配置",
+                    closable: true,
+                    buttons: [{
+                        text: '保存',
+                        iconCls: 'icon-save',
+                        handler: function() {
+                            $("#form1").form('submit', {
+                                url: URL + '/global_editor',
+                                onSubmit: function() {
+                                    return $("#form1").form('validate');
+                                },
+                                success: function(r) {
+                                    var r = $.parseJSON(r);
+                                    if (r.status) {
+                                        $("#dialog").dialog("close");
+                                    } else {
+                                        vac.alert(r.info);
+                                    }
+                                }
+                            });
+                        }
+                    }, {
+                        text: '取消',
+                        iconCls: 'icon-cancel',
+                        handler: function() {
+                            $("#dialog").dialog("close");
+                        }
+                    }]
+                });
+            })
+        }
+
 
         function show_file(row) {
             var row = row || $("#tg").datagrid("getSelected");
